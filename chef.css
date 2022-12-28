@@ -1,0 +1,16 @@
+.chefListBody{
+  background-color: var(--color-darkYellow);
+  width: 100px;
+}
+
+img{
+  width: 100px;
+  border: 5px solid white;
+  border-radius: 50%;
+  background-color:  var(--linearGradient-red);
+}
+.chefList{
+  background: var(--color-darkYellow);
+  width: 100%;
+  height: 100%;
+}

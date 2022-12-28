@@ -27,7 +27,7 @@
   --linearGradient-orange: linear-gradient(to right, var(--color-lightOrange) 0%, var(--color-lightOrange) 50%, var(--color-darkOrange) 51%, var(--color-darkOrange) 100%);
   --linearGradient-purple: linear-gradient(to right, var(--color-lightPurpel) 0%, var(--color-lightPurpel) 50%, var(--color-darkPurpel) 51%, var(--color-darkPurpel) 100%);
   --linearGradient-gray: linear-gradient(to right, var(--color-lightGray) 0%, var(--color-lightGray) 50%, var(--color-darkGray) 51%, var(--color-darkGray) 100%);
-  --linearGradient-gray: linear-gradient(to right, var(--color-lightBrown) 0%, var(--color-lightBrown) 50%, var(--color-darkBrown) 51%, var(--color-darkBrown) 100%);
+  --linearGradient-brown: linear-gradient(to right, var(--color-lightBrown) 0%, var(--color-lightBrown) 50%, var(--color-darkBrown) 51%, var(--color-darkBrown) 100%);
 }
 
 * {
@@ -36,7 +36,6 @@
   box-sizing: border-box;
 }
 
-html,
 body {
   color: var(--fontcolor-brown);
   width: 100vw;
@@ -83,12 +82,17 @@ header{
   line-height: 40px;
 }
 
-.chef{
-  background: var(--color-darkYellow);
-  height: 40%;
-}
+
 
 .consumer{
   background: var(--color-darkOrange);
   height: 40%;
+}
+
+section{
+  border:5px solid white;
+  border-radius: 10px;
+}
+
+.chefPlace{
 }

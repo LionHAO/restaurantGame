@@ -51,7 +51,7 @@ body {
 main {
   width: 700px;
   height: 700px;
-  background-color: var(--color-green);
+  background: var(--color-green);
   border: 10px solid #C0EEE4;
   padding: 10px;
 }

@@ -226,6 +226,15 @@
   margin: 10px auto auto;
   position: relative;
 }
+.shade{
+  height: 20px;
+  z-index: 0;
+}
+.dish{
+  position: absolute;
+  width: 100px;
+}
+
 .cookingBar{
   position: absolute;
   border: solid 4px white;

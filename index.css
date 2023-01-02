@@ -47,6 +47,9 @@ body {
   background: #344D67;
 }
 
+.waitCustomerBox {
+  margin-right: 20px;
+}
 
 main {
   /* display: none; */
@@ -257,17 +260,24 @@ header {
 .shade {
   height: 20px;
   z-index: 0;
+  width: 10%;
+  background: red;
+}
+
+.wait {
+  position: absolute;
+  width: 95px;
 }
 
 .dish {
   position: absolute;
-  width: 100px;
+  width: 95px;
 }
 
 .cookingBar {
   position: absolute;
   border: solid 4px white;
-  width: 100px;
+  width: 95px;
   background: bisque;
   text-align: center;
   bottom: -5px;

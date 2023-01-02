@@ -1,15 +1,16 @@
-// [img.addCookerImg, div.cookingBar, img.plateImg, p.del-chef, div.save-chef]
 var interval //全局定时器,在末尾赋值
+var isNewDay // 判断是否是全新一天
 const chefNodeList = []//厨师的dom节点list
 const chefList = []//厨师的对象list
 const chefWorking = []//储存正在工作的厨师的序号
 
-const customerWaitToSeat = []
-const customerAttheSeat = []
+const customerWaitList = []
+const customerWaitNodeList = []
 
 const chefBoxPlace = document.querySelector(".small-inline-Box")
 const button = document.querySelectorAll("button")
 const chefPlace = document.querySelector(".chefPlace")
+const customerWaitPlace = document.querySelector(".waitingPlace")
 
 //测试
 button[0].addEventListener("click", (e) => {
@@ -33,6 +34,72 @@ button[2].addEventListener("click", (e) => {
 button[3].addEventListener("click", (e) => {
   continueTime()
 })
+
+
+
+class Customer {
+  constructor() {
+    this.#init()
+  }
+
+  #init = () => {
+    // <!-- <div class='waitCustomerBox' id='waitCustomerBox0'>
+    //     <div class='cookingBar'>
+    //       <div class='shade'>
+    //         <p class='wait'>等待中</p>
+    //       </div>
+    //     </div>
+    //     <img class='customerImg' src='asset/customer1.png' alt='custmoer'>
+    //   </div> -->
+
+    const customer = document.createElement('div')
+    customer.classList.add("waitCustomerBox")
+
+    const cookingBar = document.createElement("div")
+    cookingBar.classList.add("cookingBar")
+
+    const shade = document.createElement("div")
+    shade.classList.add("shade")
+
+    const wait = document.createElement("p")
+    wait.append("等待中")
+    wait.classList.add("wait")
+
+    shade.appendChild(wait)
+    cookingBar.appendChild(shade)
+
+    const customerImg = document.createElement("img")
+    customerImg.src = 'asset/customer1.png'
+    customerImg.classList.add('customerImg')
+
+    customer.appendChild(cookingBar)
+    customer.appendChild(customerImg)
+
+    // [div.cookingBar, img.customerImg]
+    //数组添加
+    customerWaitList.push(this)
+    customerWaitNodeList.push(customer)
+    customerWaitPlace.appendChild(customer)
+  }
+
+  waiting = () => {
+    // 对象在数组的下标
+    var index = customerWaitList.indexOf(this)
+    // 获得进度条对象
+    var waitingBar = customerWaitNodeList[index].children[0]
+    //给宽进行递增
+    if (!waitingBar.children[0].style.width) {
+      console.log('here');
+      waitingBar.children[0].style.width = '0%'
+    }
+    var width = parseInt(waitingBar.children[0].style.width.match(/\d+/)[0]) + 1
+    waitingBar.children[0].style.width = width + '%'
+    if (width >= 100) {
+      customerWaitNodeList.splice(index,1)
+      customerWaitList.splice(index,1)
+    }
+  }
+}
 
 
 class Chef {
@@ -156,12 +223,6 @@ class Chef {
 }
 
 
-//初始化
-init = () => {
-  buyChef();//开局加一个
-  return true;
-}
-
 //找厨师
 buyChef = () => {
   //开局自动买一个,除了满员的情况,chefNodeList的个数总是厨师个数加一,加出来的一是占位的'+'的厨师位置
@@ -190,6 +251,7 @@ buyChef = () => {
   return true;
 }
 
+
 //监视厨师工作,其实就是监视 chefWorking 这个数组,
 //如果有厨师在工作,则这个数组内就会包含这个厨师在chefList中的序号
 //监视到厨师在工作,则会调用相应厨师的cooking函数,让他工作,每一毫秒都调用一次,
@@ -199,22 +261,56 @@ watchingChefWorking = () => {
   })
 }
 
-//全局计时器
-GlobalTime = () => {
-  watchingChefWorking()
+//判断是否是全新一天,每天都要一开始就做一些东西
+//1 顾客写死进6位
+//
+watchingIsNewDay = () => {
+  if (isNewDay) {
+    console.log("newDay");
+    //直接硬加上6位
+    for (i = 0; i < 6; i++) {
+      new Customer()
+    }
+    isNewDay = false
+  }
 }
 
+//如果
+watchIngCustomerWaiting = () => {
+  customerWaitList.map((v) => {
+    v.waiting()
+  })
+}
+
+//全局计时器
+GlobalTime = () => {
+  watchingIsNewDay()
+  watchingChefWorking()
+  watchIngCustomerWaiting()
+}
+
+//测试时间静止
 stopTime = () => {
   clearInterval(interval)
 }
 
+//测试时间继续
 continueTime = () => {
   clearInterval(interval)
   interval = setInterval(GlobalTime, 100);
 }
 
+//初始化
+init = () => {
+  isNewDay = true
+  buyChef();//开局加一个
+
+  //设置全局时间流动,之前的写法是每个厨师都有一个cooking方法会调用一个计时器,但这样的话
+  //后面是很难停下来的,设置一个时间计时器来总揽全部时间流动,每一种变化都是加入到时间流中
+  //可以实现暂停跟继续
+  interval = setInterval(GlobalTime, 100);
+  return true;
+}
+
+
 init()//全局初始化
-//设置全局时间流动,之前的写法是每个厨师都有一个cooking方法会调用一个计时器,但这样的话
-//后面是很难停下来的,设置一个时间计时器来总揽全部时间流动,每一种变化都是加入到时间流中
-//可以实现暂停跟继续
-interval = setInterval(GlobalTime, 100);

@@ -163,9 +163,10 @@ header {
 }
 
 /* 开始游戏启动部分 */
-.gameBegin {
-  background: #f1b80c;
-  display: none;
+.gameBegin{
+    background:  #f1b80c;
+    display: none;
+    z-index: 2;
 }
 
 .play .inline-Box {
@@ -189,6 +190,10 @@ header {
 .buyChef {
   background: #f1b80c;
   display: none;
+  position: fixed;
+  top:40%;
+  left: 38%;
+  z-index: 2;
 
 }
 
@@ -214,6 +219,10 @@ header {
 .fryChef {
   background: #f1b80c;
   display: none;
+  position: fixed;
+  top:40%;
+  left: 38%;
+  z-index: 2;
 }
 
 .fryChef .inline-Box {
@@ -418,4 +427,14 @@ section {
   left: 600px;
   border: 5px white solid;
   font-size: large
+}
+/* 阴影效果 */
+.blackShadow {
+  display: none;
+  position:fixed;
+  left: 27%;
+  width:46%;
+  height:100%;
+  background-color: rgba(88, 88, 88, 0.568);
+  z-index: 1;
 }

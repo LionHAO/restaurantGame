@@ -20,6 +20,8 @@ const confirmRecruitment = document.querySelector(".confirmRecruitment");//确�
 const noRecruitment = document.querySelector(".noRecruitment");//先不招聘
 const confirmFry = document.querySelector(".confirmFry");//确认解雇
 const noFry = document.querySelector(".noFry");//先不解雇
+let fryNum;//炒掉第几个厨师
+let chefNode;//厨师节点，为了删除厨师
 //测试
 button[0].addEventListener("click", (e) => {
     buyChef()
@@ -172,10 +174,15 @@ class Chef {
         const delChef = document.createElement("p");
         delChef.append("×")
         delChef.classList.add("del-chef");
+        delChef.setAttribute("data-index",chefNodeList.length)
         delChef.style.display = "none"
         delChef.addEventListener("click", (e) => {
             fryChef1.style.display="block";
             blackShadow.style.display="block";
+            chefNode=delChef.parentNode;
+            fryNum = e.target.dataset.index;
+            console.log(fryNum+"---------");
+            console.log(e.target);
         })
 
 
@@ -259,8 +266,9 @@ buyChef = () => {
     chefList[5].isBusy = false
   } else if (chefNodeList.length == 0) {
     //开局加一个
-    chefList.push(new Chef(isBusy = false, workable = false))//也可以写成Chef(false,true)只是比较好看
-  } else {
+    chefList.push(new Chef(isBusy = false, workable = false))//也可以写成Chef(false,true)只是比较好
+
+    } else {
     //先把占位厨师的+去掉,给他加上x(删除符号),然后创建一个占位厨师
     chefNodeList[chefNodeList.length - 1].children[4].style.display = "none"
     chefNodeList[chefNodeList.length - 1].children[3].style.display = "initial"
@@ -321,7 +329,8 @@ function fryChef() {
         chefNodeList[2].children[4].style.display = "initial"
         chefNodeList[2].children[3].style.display = "none"
     }  else {
-        chefNodeList.re
+      chefNodeList.splice(fryNum,1);
+      chefBoxPlace.removeChild(chefNode);
     }
     //大于三位厨师框框变大
     if (chefNodeList.length > 3) {
@@ -331,7 +340,6 @@ function fryChef() {
 }
 //确认招聘
 confirmRecruitment.addEventListener("click", (e) => {
-    console.log(e);
     buyChef1.style.display="none";
     blackShadow.style.display="none";
     buyChef()
@@ -346,8 +354,13 @@ noFry.addEventListener("click", (e) => {
     fryChef1.style.display="none";
     blackShadow.style.display="none";
 })
+//确认解雇
 confirmFry.addEventListener("click", (e) => {
+    console.log(chefNodeList.length);
     fryChef()
+    fryChef1.style.display="none";
+    blackShadow.style.display="none";
+    console.log(chefNodeList.length);
 })
 
 

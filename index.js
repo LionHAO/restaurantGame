@@ -317,7 +317,11 @@ noFry.addEventListener("click", (e) => {
     blackShadow.style.display="none";
 })
 confirmFry.addEventListener("click", (e) => {
-    fryChef()
+  console.log(chefNodeList.length);
+  fryChef()
+  fryChef1.style.display="none";
+  blackShadow.style.display="none";
+  console.log(chefNodeList.length);
 })
 
 //解雇厨师
@@ -338,31 +342,6 @@ function fryChef() {
     }
     return true;
 }
-//确认招聘
-confirmRecruitment.addEventListener("click", (e) => {
-    buyChef1.style.display="none";
-    blackShadow.style.display="none";
-    buyChef()
-})
-//先不招聘
-noRecruitment.addEventListener("click", (e) => {
-    buyChef1.style.display="none";
-    blackShadow.style.display="none";
-})
-//先不解雇
-noFry.addEventListener("click", (e) => {
-    fryChef1.style.display="none";
-    blackShadow.style.display="none";
-})
-//确认解雇
-confirmFry.addEventListener("click", (e) => {
-    console.log(chefNodeList.length);
-    fryChef()
-    fryChef1.style.display="none";
-    blackShadow.style.display="none";
-    console.log(chefNodeList.length);
-})
-
 
 //监视厨师工作,其实就是监视 chefWorking 这个数组,
 //如果有厨师在工作,则这个数组内就会包含这个厨师在chefList中的序号

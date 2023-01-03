@@ -2,6 +2,7 @@ var interval //全局定时器,在末尾赋值
 var isNewDay // 判断是否是全新一天
 const chefNodeList = []//厨师的dom节点list
 const chefList = []//厨师的对象list
+const chefListAndDel = []//厨师的对象，包含被炒的厨师
 const chefWorking = []//储存正在工作的厨师的序号
 
 const customerWaitList = []
@@ -20,7 +21,8 @@ const confirmRecruitment = document.querySelector(".confirmRecruitment");//确�
 const noRecruitment = document.querySelector(".noRecruitment");//先不招聘
 const confirmFry = document.querySelector(".confirmFry");//确认解雇
 const noFry = document.querySelector(".noFry");//先不解雇
-let fryNum;//炒掉第几个厨师
+let fryNum;//炒掉第几个厨师,逻辑上他的值和chefid的值一致
+// let chefid;
 let chefNode;//厨师节点，为了删除厨师
 //测试
 button[0].addEventListener("click", (e) => {
@@ -113,11 +115,13 @@ class Customer {
 
 
 class Chef {
-    constructor(isBusy,  workable) {
+    constructor(isBusy,  workable, chefid) {
         this.isBusy = isBusy //忙吗
         this.workable = workable //能不能干活
+        this.chefid = chefid //第几位厨师
         this.#init();
     }
+    
 
     //私有属性
     #init = () => {//每new一个Chef 就会做这件事,动态创建好一个这玩意
@@ -174,15 +178,15 @@ class Chef {
         const delChef = document.createElement("p");
         delChef.append("×")
         delChef.classList.add("del-chef");
-        delChef.setAttribute("data-index",chefNodeList.length)
+        delChef.setAttribute("data-index",this.chefid)
         delChef.style.display = "none"
         delChef.addEventListener("click", (e) => {
+            console.log(chefListAndDel.length+"------chefListAndDel.length-----------");
             fryChef1.style.display="block";
             blackShadow.style.display="block";
             chefNode=delChef.parentNode;
             fryNum = e.target.dataset.index;
-            console.log(fryNum+"---------");
-            console.log(e.target);
+            console.log(fryNum+"-----fryNum----");
         })
 
 
@@ -213,6 +217,7 @@ class Chef {
         chefBoxPlace.appendChild(chef);
 
         chefNodeList.push(chef)
+        chefListAndDel.push(chef)
     }
 
  //这个函数的工作逻辑是每一次调用进度条都会涨一点,需要外部调用实现增长不会自增
@@ -247,11 +252,6 @@ class Chef {
 }
 
 
-//初始化
-init = () => {
-  buyChef();//开局加一个
-  return true;
-}
 
 //找厨师
 buyChef = () => {
@@ -266,14 +266,14 @@ buyChef = () => {
     chefList[5].isBusy = false
   } else if (chefNodeList.length == 0) {
     //开局加一个
-    chefList.push(new Chef(isBusy = false, workable = false))//也可以写成Chef(false,true)只是比较好
+    chefList.push(new Chef(isBusy = false, workable = false,chefListAndDel.length))//也可以写成Chef(false,true)只是比较好
 
     } else {
     //先把占位厨师的+去掉,给他加上x(删除符号),然后创建一个占位厨师
     chefNodeList[chefNodeList.length - 1].children[4].style.display = "none"
     chefNodeList[chefNodeList.length - 1].children[3].style.display = "initial"
     chefList[chefList.length - 1].workable = true
-    chefList.push(new Chef(isBusy = false, workable = false))
+    chefList.push(new Chef(isBusy = false, workable = false,chefListAndDel.length))
   }
   //大于三位厨师框框变大
   if (chefNodeList.length > 3) {
@@ -291,7 +291,15 @@ function fryChef() {
         chefNodeList[2].children[4].style.display = "initial"
         chefNodeList[2].children[3].style.display = "none"
     }  else {
-        chefNodeList.re
+        console.log(chefBoxPlace);
+        for (var i = 0; i < chefList.length; i++) {
+            console.log(chefList[i]);
+            if(chefList[i].chefid == fryNum){
+                console.log(chefList[i].chefid+"-----chefid--------");
+                chefList.splice(i,1);
+            }
+        }
+        chefBoxPlace.removeChild(chefNode);
     }
     //大于三位厨师框框变大
     if (chefNodeList.length > 3) {
@@ -301,7 +309,6 @@ function fryChef() {
 }
 //确认招聘
 confirmRecruitment.addEventListener("click", (e) => {
-    console.log(e);
     buyChef1.style.display="none";
     blackShadow.style.display="none";
     buyChef()
@@ -316,32 +323,15 @@ noFry.addEventListener("click", (e) => {
     fryChef1.style.display="none";
     blackShadow.style.display="none";
 })
+//确认解雇
 confirmFry.addEventListener("click", (e) => {
-  console.log(chefNodeList.length);
+  console.log(chefList.length);
   fryChef()
   fryChef1.style.display="none";
   blackShadow.style.display="none";
-  console.log(chefNodeList.length);
+  console.log(chefList.length);
 })
 
-//解雇厨师
-function fryChef() {
-    if (chefNodeList.length == 2) {
-        //如果只剩下一位厨师就不能解雇了
-        chefNodeList[1].children[4].style.display = "none"
-        chefNodeList[1].children[3].style.display = "none"
-        chefNodeList[2].children[4].style.display = "initial"
-        chefNodeList[2].children[3].style.display = "none"
-    }  else {
-      chefNodeList.splice(fryNum,1);
-      chefBoxPlace.removeChild(chefNode);
-    }
-    //大于三位厨师框框变大
-    if (chefNodeList.length > 3) {
-        chefPlace.style.height = '38%'
-    }
-    return true;
-}
 
 //监视厨师工作,其实就是监视 chefWorking 这个数组,
 //如果有厨师在工作,则这个数组内就会包含这个厨师在chefList中的序号
@@ -394,6 +384,7 @@ continueTime = () => {
 //初始化
 init = () => {
   isNewDay = true
+  buyChef();//开局加一个
   buyChef();//开局加一个
 
   //设置全局时间流动,之前的写法是每个厨师都有一个cooking方法会调用一个计时器,但这样的话

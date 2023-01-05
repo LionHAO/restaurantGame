@@ -88,15 +88,18 @@ header {
   line-height: 40px;
 }
 
-
+.seatImg {
+  width: 100%
+}
 
 /* 点餐部分 */
 .menu {
   width: 450px;
   height: 550px;
   background: #f1b80c;
-  position: relative;
+  position: absolute;
   display: none;
+  z-index: 2;
 }
 
 .menu-border {
@@ -162,10 +165,10 @@ header {
 }
 
 /* 开始游戏启动部分 */
-.gameBegin{
-    background:  #f1b80c;
-    display: none;
-    z-index: 2;
+.gameBegin {
+  background: #f1b80c;
+  display: none;
+  z-index: 2;
 }
 
 .play .inline-Box {
@@ -190,7 +193,7 @@ header {
   background: #f1b80c;
   display: none;
   position: fixed;
-  top:40%;
+  top: 40%;
   left: 38%;
   z-index: 2;
 
@@ -219,7 +222,7 @@ header {
   background: #f1b80c;
   display: none;
   position: fixed;
-  top:40%;
+  top: 40%;
   left: 38%;
   z-index: 2;
 }
@@ -268,7 +271,7 @@ header {
 .shade {
   height: 20px;
   z-index: 0;
-  width: 10%;
+  width: 1%;
   background: red;
 }
 
@@ -278,7 +281,6 @@ header {
 }
 
 .dish {
-  position: absolute;
   width: 95px;
 }
 
@@ -286,9 +288,21 @@ header {
   position: absolute;
   border: solid 4px white;
   width: 95px;
-  background: bisque;
   text-align: center;
   bottom: -5px;
+  background: bisque;
+}
+
+.Bar {
+  margin-top: -4px;
+  border: solid 4px white;
+  background: bisque;
+  width: 100px;
+  height: 28px;
+  text-align: center;
+  bottom: -5px;
+  top: 60px;
+  display: none;
 }
 
 .addCookerImg {
@@ -453,13 +467,13 @@ section {
   border: 5px white solid;
   font-size: large
 }
+
 /* 阴影效果 */
 .blackShadow {
   display: none;
-  position:fixed;
-  left: 27%;
-  width:46%;
-  height:100%;
+  position: absolute;
+  width: 97%;
+  height: 100%;
   background-color: rgba(88, 88, 88, 0.568);
   z-index: 1;
 }

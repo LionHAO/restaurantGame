@@ -10,8 +10,8 @@
 </head>
 
 <body>
-  <div class="blackShadow"></div>
   <main id="main">
+    <div class="blackShadow"></div>
     <header>
       <div class="time">
         W<span class="weekNum">1</span> D<span class="dayNum">1</span>
@@ -24,6 +24,7 @@
     <button>烧菜</button>
     <button>暂停</button>
     <button>继续</button>
+    <button>入座</button>
     <div class="chefPlace">
       <div class='small-inline-Box'><!--inline-Box-->
         <!-- 这个位置是放厨师的 -->
@@ -49,20 +50,26 @@
     </div>
     <div class="consumerPlace">
       <div class="grid-container">
-        <div class='grid-item' id='customerBox1'>
-          <div class='seat'></div>
+        <!-- <img class="dishOk" data-index='3' data-allindex='3' src='asset/food.png' alt='菜做好了'> -->
+        <div class="grid-item">
+          <div class="seat">
+            <!-- <img class="seatImg" src="/asset/customer2.png" /> -->
+          </div>
           <div class="orderdishes">
-            <div class='eatingBar'>
-              <p class='orderdish'>UI炖UI</p>
-              <img class="dishOk" data-index='1' data-allindex='1' src='asset/food.png' alt='菜做好了'>
+            <div class="Bar">
+              <div class="shade">
+                <p class="dish">1</p>
+              </div>
             </div>
-            <div class='eatingBar'>
-              <p class='orderdish'>爆炒js</p>
-              <img class="dishOk" data-index='2' data-allindex='1' src='asset/food.png' alt='菜做好了'>
+            <div class="Bar">
+              <div class="shade">
+                <p class="dish">1</p>
+              </div>
             </div>
-            <div class='eatingBar'>
-              <p class='orderdish'>酥炸HEML</p>
-              <img class="dishOk" data-index='3' data-allindex='1' src='asset/food.png' alt='菜做好了'>
+            <div class="Bar">
+              <div class="shade">
+                <p class="dish">1</p>
+              </div>
             </div>
           </div>
           <img class='checkout' data-index='1' src='asset/money.png' alt='结账'>
@@ -71,17 +78,20 @@
         <div class='grid-item' id='customerBox2'>
           <div class='seat'></div>
           <div class="orderdishes">
-            <div class='eatingBar'> <!--顾客吃菜进度条，可由class直接添加-->
-              <p class='orderdish'>UI炖UI </p>
-              <img class="dishOk" data-index='1' data-allindex='2' src='asset/food.png' alt='菜做好了'>
+            <div class="Bar">
+              <div class="shade">
+                <p class="dish">UI炖UI</p>
+              </div>
             </div>
-            <div class='eatingBar'>
-              <p class='orderdish'>UI炖UI</p>
-              <img class="dishOk" data-index='2' data-allindex='2' src='asset/food.png' alt='菜做好了'>
+            <div class="Bar">
+              <div class="shade">
+                <p class="dish">UI炖UI</p>
+              </div>
             </div>
-            <div class='eatingBar'>
-              <p class='orderdish'>酥炸HEML</p>
-              <img class="dishOk" data-index='3' data-allindex='2' src='asset/food.png' alt='菜做好了'>
+            <div class="Bar">
+              <div class="shade">
+                <p class="dish">UI炖UI</p>
+              </div>
             </div>
           </div>
           <img class='checkout' data-index='2' src='asset/money.png' alt='结账'>
@@ -90,36 +100,42 @@
         <div class='grid-item' id='customerBox3'>
           <div class='seat'></div>
           <div class="orderdishes">
-            <div class='eatingBar'>
-              <p class='orderdish'>UI炖UI</p>
-              <img class="dishOk" data-index='1' data-allindex='3' src='asset/food.png' alt='菜做好了'>
+            <div class="Bar">
+              <div class="shade">
+                <p class="dish">UI炖UI</p>
+              </div>
             </div>
-            <div class='eatingBar'>
-              <p class='orderdish'>酥炸HEML</p>
-              <img class="dishOk" data-index='2' data-allindex='3' src='asset/food.png' alt='菜做好了'>
+            <div class="Bar">
+              <div class="shade">
+                <p class="dish">UI炖UI</p>
+              </div>
             </div>
-            <div class='eatingBar'>
-              <p class='orderdish'>UI炖UI</p>
-              <img class="dishOk" data-index='3' data-allindex='3' src='asset/food.png' alt='菜做好了'>
+            <div class="Bar">
+              <div class="shade">
+                <p class="dish">UI炖UI</p>
+              </div>
             </div>
           </div>
           <img class='checkout' data-index='3' src='asset/money.png' alt='结账'>
           <img class='placate' data-index='3' src='asset/heart.png' alt='安抚'>
         </div>
-        <div class='grid-item' id='customerBox4'>
-          <div class='seat'></div>
-          <div class="orderdishes">
-            <div class='eatingBar'>
-              <p class='orderdish'>UI炖UI</p>
-              <img class="dishOk" data-index='1' data-allindex='4' src='asset/food.png' alt='菜做好了'>
+        <div class="grid-item">
+          <div class="seat"></div>
+         <div class="orderdishes">
+            <div class="Bar">
+              <div class="shade">
+                <p class="dish">UI炖UI</p>
+              </div>
             </div>
-            <div class='eatingBar'>
-              <p class='orderdish'>酥炸HEML</p>
-              <img class="dishOk" data-index='2' data-allindex='4' src='asset/food.png' alt='菜做好了'>
+            <div class="Bar">
+              <div class="shade">
+                <p class="dish">UI炖UI</p>
+              </div>
             </div>
-            <div class='eatingBar'>
-              <p class='orderdish'>酥炸</p>
-              <img class="dishOk" data-index='3' data-allindex='4' src='asset/food.png' alt='菜做好了'>
+            <div class="Bar">
+              <div class="shade">
+                <p class="dish">UI炖UI</p>
+              </div>
             </div>
           </div>
           <img class='checkout' data-index='4' src='asset/money.png' alt='结账'>
@@ -167,11 +183,12 @@
         <div class='inline-Box-eating4' id='inline-customerBox1'>
           <div class='customer-shade'></div>
         </div>
-        <img class='customerImg' src='asset/customer1.png' alt='custmoer'>
+        <!-- <img class='customerImg' src='asset/customer2.png' alt='custmoer'> -->
+        <!-- 一个花里胡哨的功能,写了增加工作量 -->
       </div>
-      <p class='orderDishes'><span class='customerName'>QIAN</span>正在点菜，已点 <span class='totalPrice'></span> 元的菜
-      </p>
-      <div class='menu-border'>
+      <!-- <p class='orderDishes'><span class='customerName'>QIAN</span>正在点菜，已点 <span class='totalPrice'></span> 元的菜 -->
+      <!-- </p> -->
+      <!-- <div class='menu-border'>
         <div class='inline-border'>
           <p class='allDishes'>凉菜（二选一，可不点）</p>
           <p class='dishes'><input class='check' type="checkbox" id='coldDishe1'>凉拌SAN<span>...............￥
@@ -194,6 +211,19 @@
               5</span></p>
           <p class='dishes'><input class='check' type="checkbox" id='drink2'>小程序奶茶<span>...............￥
               6</span></p>
+        </div>
+      </div> -->
+      <div class='menu-border'>
+        <div class='inline-border'>
+          <p class='allDishes'>小菜(可不点)</p>
+          <p class='dishes'><input class='check' type="checkbox" id='smallDishe'>头孢<span>...............￥
+              12</span></p>
+          <p class='allDishes'>主菜（必点）</p>
+          <p class='dishes'><input class='check' type="checkbox" id='mainDishe'>炸鸡<span>...............￥
+              15</span></p>
+          <p class='allDishes'>饮品（可不点）</p>
+          <p class='dishes'><input class='check' type="checkbox" id='drink'>啤酒<span>...............￥
+              10</span></p>
         </div>
       </div>
       <div class='orderCompleteBorder'>

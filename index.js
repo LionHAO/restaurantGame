@@ -1,14 +1,18 @@
 var interval //全局定时器,在末尾赋值
 var isNewDay // 判断是否是全新一天
+var sumMoney //总金额
+var allDishes = [] //所有菜品队列
+var doneDishes = [] //完成的菜品
+
 const chefNodeList = []//厨师的dom节点list
 const chefList = []//厨师的对象list
 const chefWorking = []//储存正在工作的厨师的序号
 
-const customerWaitList = []
-const customerWaitNodeList = []
+const customerWaitList = []//顾客等待队列的对象list
+const customerWaitNodeList = []//顾客等待队列的dom节点list
 
-const customerSeatList = []
-const customerSeatNodeList = []
+const customerSeatList = []//顾客座位队列的座位list
+const customerSeatNodeList = []//顾客座位队列的dom节点list
 
 const chefBoxPlace = document.querySelector(".small-inline-Box")
 const button = document.querySelectorAll("button")
@@ -24,6 +28,10 @@ const noRecruitment = document.querySelector(".noRecruitment");//先不招聘
 const confirmFry = document.querySelector(".confirmFry");//确认解雇
 const noFry = document.querySelector(".noFry");//先不解雇
 const customerSeats = document.querySelectorAll(".grid-item")
+
+const menu = document.querySelector(".menu")//菜单
+const checkedDish = document.querySelectorAll(".check")//菜单上的菜的
+const confirmButton = document.querySelectorAll(".menu button")//菜单上的俩按钮
 
 
 let fryNum;//炒掉第几个厨师
@@ -51,31 +59,62 @@ button[3].addEventListener("click", (e) => {
   continueTime()
 })
 
-{/*     <div class="grid-item">
-          <div class="seat">
-            <img class="seatImg" src="/asset/customer2.png" />
-          </div>
-          <div class="orderdishes">
-            <p class="orderdish">UI炖UI</p>
-            <p class="orderdish">UI炖UI</p>
-            <p class="orderdish">UI炖UI</p>
-        </div> */}
 button[4].addEventListener("click", () => {
+  //菜单的确定按钮
+  //获取表单的菜品选择情况
+  var currentDish = []
+  for (i in checkedDish) {
+    if (checkedDish[i].checked) {
+      currentDish.push(i)//在当前菜品队列中增加
+      allDishes.push(i)//在总菜品队里俄中
+    }
+  }
+  //菜品已经储存在currentDish中,其储存形式是如['0','1','2']
   for (const i in customerSeats) {
     const element = customerSeats[i];
     //如果位置没有图片,则是空位
     if (!element.children[0].children[0]) {
-      new CustomerSeat(istc = "/asset/customer2.png", node = element)
+      new CustomerSeat(istc = "/asset/customer2.png", node = element, myDish = [0, 1, 2])
       break
     }
   }
+  //还是上一个顾客的菜单
+  menu.style.display = 'none'
+  blackShadow.style.display = 'none'
+  //菜单的取消按钮
 })
 
+//   <div class="grid-item">
+//   <div class="seat"></div>
+//   <div class="orderdishes">
+//     <div class="Bar">
+//       <div class="shade">
+//         <p class="dish">UI炖UI</p>
+//       </div>
+//     </div>
+//     <div class="Bar">
+//       <div class="shade">
+//         <p class="dish">UI炖UI</p>
+//       </div>
+//     </div>
+//     <div class="Bar">
+//       <div class="shade">
+//         <p class="dish">UI炖UI</p>
+//       </div>
+//     </div>
+//   </div>
+// </div>
+
+
+//顾客的位置对象
 class CustomerSeat {
-  constructor(isrc, node) {
-    //两个参数 一个是图片路径,一个是node节点(why do this?)[4个节点都是一样的])
+  constructor(isrc, node, myDish) {
+    //两个参数 一个是图片路径,一个是座位的node节点,一个是菜品列表)
     this.isrc = isrc
     this.node = node
+    this.myDish = myDish//点的菜
+    this.money = 0
+    this.bar = node.children[1].children//进度条
     this.#init()
   }
 
@@ -83,8 +122,49 @@ class CustomerSeat {
     var seatImg = document.createElement('img')
     seatImg.classList.add('seatImg')
     seatImg.src = this.isrc
-    console.log(node);
     node.children[0].appendChild(seatImg)
+
+    customerSeatList.push(this)
+
+    var j = 0
+    for (i in this.myDish) {
+      if (i == 0) {
+        this.bar[j].children[0].children[0].innerText = '头孢'
+        this.bar[j].style.display = 'block'
+      }
+      if (i == 1) {
+        this.bar[j].children[0].children[0].innerText = '炸鸡'
+        this.bar[j].style.display = 'block'
+      }
+      if (i == 2) {
+        this.bar[j].children[0].children[0].innerText = '啤酒'
+        this.bar[j].style.display = 'block'
+      }
+      //如果不走这一步初始化width 可能在后面的判断会读不到width
+      this.bar[j].children[0].style.width = '0%'
+      j += 1
+    }
+    menu.style.display = 'none'
+    blackShadow.style.display = 'none'
+  }
+
+  waiting() {
+    if (this.myDish.length <= 0) {
+      return
+    }
+    //给宽进行递增
+    for (i = 0; i < this.myDish.length; i++) {
+      //要是没有这个判断,会疯狂报错
+      //因为这个i成分不纯有很多乱七八糟的东西但是其中有1,2,3这样我们想要的可以自己log看看
+      var width = this.bar[i].children[0].style.width.match(/\d+/)
+      if (width >= 100) {
+        this.bar[i].children[0].style.background = 'black'
+        continue
+      }
+      width = parseInt(width[0]) + 1
+      this.bar[i].children[0].style.width = width + '%'
+    }
+
   }
 }
 
@@ -131,6 +211,11 @@ class Customer {
     customerWaitList.push(this)
     customerWaitNodeList.push(customer)
     customerWaitPlace.appendChild(customer)
+
+    customer.addEventListener('click', (e) => {
+      menu.style.display = 'initial'
+      blackShadow.style.display = 'initial'
+    })
   }
 
   waiting = () => {
@@ -156,6 +241,7 @@ class Chef {
   constructor(isBusy, workable) {
     this.isBusy = isBusy //忙吗
     this.workable = workable //能不能干活
+    this.workingDish //烧的是哪道菜
     this.#init();
   }
 
@@ -269,10 +355,23 @@ class Chef {
       //解禁display
       cookingBar.style.display = 'block'
       //这里后面要根据菜品修改,把咸鱼改成传入的参数
-      cookingBar.children[0].children[0].innerText = "咸鱼"
+
+      switch (this.workingDish) {
+        case '0':
+          cookingBar.children[0].children[0].innerText = '头孢'
+          break
+        case '1':
+          cookingBar.children[0].children[0].innerText = '炸鸡'
+          break
+        case '2':
+          cookingBar.children[0].children[0].innerText = '啤酒'
+          break
+      }
+
       cookingBar.children[0].style.width = '0%'
       cookingBar.children[0].style.background = 'red'
     }
+
     //给宽进行递增
     var width = parseInt(cookingBar.children[0].style.width.match(/\d+/)[0]) + 1
     cookingBar.children[0].style.width = width + '%'
@@ -339,30 +438,7 @@ function fryChef() {
   }
   return true;
 }
-//确认招聘
-confirmRecruitment.addEventListener("click", (e) => {
-  console.log(e);
-  buyChef1.style.display = "none";
-  blackShadow.style.display = "none";
-  buyChef()
-})
-//先不招聘
-noRecruitment.addEventListener("click", (e) => {
-  buyChef1.style.display = "none";
-  blackShadow.style.display = "none";
-})
-//先不解雇
-noFry.addEventListener("click", (e) => {
-  fryChef1.style.display = "none";
-  blackShadow.style.display = "none";
-})
-confirmFry.addEventListener("click", (e) => {
-  console.log(chefNodeList.length);
-  fryChef()
-  fryChef1.style.display = "none";
-  blackShadow.style.display = "none";
-  console.log(chefNodeList.length);
-})
+
 
 //解雇厨师
 function fryChef() {
@@ -387,6 +463,18 @@ function fryChef() {
 //如果有厨师在工作,则这个数组内就会包含这个厨师在chefList中的序号
 //监视到厨师在工作,则会调用相应厨师的cooking函数,让他工作,每一毫秒都调用一次,
 watchingChefWorking = () => {
+  if (allDishes.length > 0) {
+    chefList.some((v, i) => {
+      //类似map ,但当他return和return false时会结束当前循环,return true会完全结束循环
+      if (!v.isBusy && v.workable) {
+        v.workingDish = allDishes.shift()//这个方法返回并删除数组的第一个元素
+        chefWorking.push(i)
+        return true
+      }
+    })
+  }
+
+
   chefWorking.map((v, i) => {
     chefList[i].cooking()
   })
@@ -413,11 +501,20 @@ watchIngCustomerWaiting = () => {
   })
 }
 
+watchingCustomerSeatWaiting = () => {
+  customerSeatList.map((v) => {
+    console.log();
+    v.waiting()
+  })
+}
+
+
 //全局计时器
 GlobalTime = () => {
   watchingIsNewDay()
   watchingChefWorking()
   watchIngCustomerWaiting()
+  watchingCustomerSeatWaiting()
 }
 
 //测试时间静止
@@ -431,11 +528,82 @@ continueTime = () => {
   interval = setInterval(GlobalTime, 100);
 }
 
+//给所有需要加上eventListener的集合
+allAddEventListener = () => {
+  //确认招聘
+  confirmRecruitment.addEventListener("click", (e) => {
+    buyChef1.style.display = "none";
+    blackShadow.style.display = "none";
+    buyChef()
+  })
+
+
+  //先不招聘
+  noRecruitment.addEventListener("click", (e) => {
+    buyChef1.style.display = "none";
+    blackShadow.style.display = "none";
+  })
+  //先不解雇
+  noFry.addEventListener("click", (e) => {
+    fryChef1.style.display = "none";
+    blackShadow.style.display = "none";
+  })
+  confirmFry.addEventListener("click", (e) => {
+    console.log(chefNodeList.length);
+    fryChef()
+    fryChef1.style.display = "none";
+    blackShadow.style.display = "none";
+    console.log(chefNodeList.length);
+  })
+
+
+  //菜单的确定按钮
+  confirmButton[0].addEventListener('click', (e) => {
+    //获取表单的菜品选择情况
+    var currentDish = []
+    //checkedDish是html的dom节点,判断是否给某个菜品打了勾
+    for (i in checkedDish) {
+      if (checkedDish[i].checked) {
+        currentDish.push(i)//在当前菜品队列中增加
+        allDishes.push(i)//在总菜品队里俄中
+      }
+    }
+    //菜品已经储存在currentDish中,其储存形式是如['0','1','2']
+    for (const i in customerSeats) {
+      const element = customerSeats[i];
+      //如果位置没有图片,则是空位
+      if (!element.children[0].children[0]) {
+        new CustomerSeat(istc = "/asset/customer2.png", node = element, myDish = currentDish)
+        break
+      }
+    }
+    resetMenu()//把选项去了,如果不调用这个东西下一个顾客打开菜单menu里面
+    //还是上一个顾客的菜单
+    menu.style.display = 'none'
+    blackShadow.style.display = 'none'
+  })
+  //菜单的取消按钮
+  confirmButton[1].addEventListener('click', (e) => {
+    resetMenu()//把选项去了,如果不调用这个东西下一个顾客打开菜单menu里面
+    //还是上一个顾客的菜单
+    menu.style.display = 'none'
+    blackShadow.style.display = 'none'
+  })
+}
+
+resetMenu = () => {
+  for (i in checkedDish) {
+    checkedDish[i].checked = false
+  }
+}
+
 //初始化
 init = () => {
+  sumMoney = 300
   isNewDay = true
+  allAddEventListener()//开局需要加上的eventListener
   buyChef();//开局加一个
-
+  buyChef();//开局加一个
   //设置全局时间流动,之前的写法是每个厨师都有一个cooking方法会调用一个计时器,但这样的话
   //后面是很难停下来的,设置一个时间计时器来总揽全部时间流动,每一种变化都是加入到时间流中
   //可以实现暂停跟继续

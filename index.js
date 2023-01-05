@@ -15,14 +15,12 @@ const chefNodeList = []//厨师的dom节点list
 const chefList = []//厨师的对象list
 const chefWorking = []//储存正在工作的厨师的序号var
 
-const customerWaitList = []//顾客等待队列的对象list
-const customerWaitNodeList = []//顾客等待队列的dom节点list
+var customerWaitList = []//顾客等待队列的对象list
+var customerWaitNodeList = []//顾客等待队列的dom节点list
 
 const customerSeatList = []//顾客座位队列的座位list
 const customerSeatNodeList = []//顾客座位队列的dom节点list
 
-const customerSeatList = []
-const customerSeatNodeList = []
 const dayNum = document.querySelector('.dayNum')//天数
 const weekNum = document.querySelector('.weekNum')//周数
 const chefBoxPlace = document.querySelector(".small-inline-Box")
@@ -45,8 +43,6 @@ const checkedDish = document.querySelectorAll(".check")//菜单上的菜的
 const confirmButton = document.querySelectorAll(".menu button")//菜单上的俩按钮
 
 
-let fryNum;//炒掉第几个厨师
-let chefNode;//厨师节点，为了删除厨师
 //测试
 button[0].addEventListener("click", (e) => {
   buyChef()
@@ -458,30 +454,6 @@ function fryChef() {
   }
   return true;
 }
-//确认招聘
-confirmRecruitment.addEventListener("click", (e) => {
-  console.log(e);
-  buyChef1.style.display = "none";
-  blackShadow.style.display = "none";
-  buyChef()
-})
-//先不招聘
-noRecruitment.addEventListener("click", (e) => {
-  buyChef1.style.display = "none";
-  blackShadow.style.display = "none";
-})
-//先不解雇
-noFry.addEventListener("click", (e) => {
-  fryChef1.style.display = "none";
-  blackShadow.style.display = "none";
-})
-confirmFry.addEventListener("click", (e) => {
-  console.log(chefNodeList.length);
-  fryChef()
-  fryChef1.style.display = "none";
-  blackShadow.style.display = "none";
-  console.log(chefNodeList.length);
-})
 
 //解雇厨师
 function fryChef() {
@@ -599,69 +571,6 @@ continueTime = () => {
   interval = setInterval(chronography, 100);
 }
 
-//给所有需要加上eventListener的集合
-allAddEventListener = () => {
-  //确认招聘
-  confirmRecruitment.addEventListener("click", (e) => {
-    buyChef1.style.display = "none";
-    blackShadow.style.display = "none";
-    buyChef()
-  })
-
-
-  //先不招聘
-  noRecruitment.addEventListener("click", (e) => {
-    buyChef1.style.display = "none";
-    blackShadow.style.display = "none";
-  })
-  //先不解雇
-  noFry.addEventListener("click", (e) => {
-    fryChef1.style.display = "none";
-    blackShadow.style.display = "none";
-  })
-  confirmFry.addEventListener("click", (e) => {
-    console.log(chefNodeList.length);
-    fryChef()
-    fryChef1.style.display = "none";
-    blackShadow.style.display = "none";
-    console.log(chefNodeList.length);
-  })
-
-
-  //菜单的确定按钮
-  confirmButton[0].addEventListener('click', (e) => {
-    //获取表单的菜品选择情况
-    var currentDish = []
-    //checkedDish是html的dom节点,判断是否给某个菜品打了勾
-    for (i in checkedDish) {
-      if (checkedDish[i].checked) {
-        currentDish.push(i)//在当前菜品队列中增加
-        allDishes.push(i)//在总菜品队里俄中
-      }
-    }
-    //菜品已经储存在currentDish中,其储存形式是如['0','1','2']
-    for (const i in customerSeats) {
-      const element = customerSeats[i];
-      //如果位置没有图片,则是空位
-      if (!element.children[0].children[0]) {
-        new CustomerSeat(istc = "/asset/customer2.png", node = element, myDish = currentDish)
-        break
-      }
-    }
-    resetMenu()//把选项去了,如果不调用这个东西下一个顾客打开菜单menu里面
-    //还是上一个顾客的菜单
-    menu.style.display = 'none'
-    blackShadow.style.display = 'none'
-  })
-  //菜单的取消按钮
-  confirmButton[1].addEventListener('click', (e) => {
-    resetMenu()//把选项去了,如果不调用这个东西下一个顾客打开菜单menu里面
-    //还是上一个顾客的菜单
-    menu.style.display = 'none'
-    blackShadow.style.display = 'none'
-  })
-}
-
 resetMenu = () => {
   for (i in checkedDish) {
     checkedDish[i].checked = false
@@ -677,7 +586,6 @@ allAddEventListener = () => {
     buyChef()
   })
 
-
   //先不招聘
   noRecruitment.addEventListener("click", (e) => {
     buyChef1.style.display = "none";
@@ -713,7 +621,7 @@ allAddEventListener = () => {
       const element = customerSeats[i];
       //如果位置没有图片,则是空位
       if (!element.children[0].children[0]) {
-        new CustomerSeat(istc = "/asset/customer2.png", node = element, myDish = currentDish)
+        new CustomerSeat(isrc = "/asset/customer3.png", node = element, myDish = currentDish)
         break
       }
     }

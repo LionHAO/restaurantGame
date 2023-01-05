@@ -10,6 +10,9 @@ let chefNode;//厨师节点，为了删除厨师
 var sumMoney //总金额
 var allDishes = [] //所有菜品队列
 var doneDishes = [] //完成的菜品
+var customerId;//第几位顾客
+var seatid;//上座时的第几位顾客
+var customerWaitNode;//等待顾客节点
 
 const chefNodeList = []//厨师的dom节点list
 const chefList = []//厨师的对象list
@@ -41,6 +44,8 @@ const customerSeats = document.querySelectorAll(".grid-item")
 const menu = document.querySelector(".menu")//菜单
 const checkedDish = document.querySelectorAll(".check")//菜单上的菜的
 const confirmButton = document.querySelectorAll(".menu button")//菜单上的俩按钮
+//顾客图片
+const customersrc = ['asset/customer1.png','asset/customer2.png','asset/customer3.png','asset/customer4.png','asset/customer5.png','asset/customer6.png']
 
 
 //测试
@@ -179,7 +184,8 @@ class Customer {
   constructor() {
     this.#init()
   }
-
+  
+  // customerid = nowcustomer
   #init = () => {
     // <!-- <div class='waitCustomerBox' id='waitCustomerBox0'>
     //     <div class='cookingBar'>
@@ -191,8 +197,9 @@ class Customer {
     //   </div> -->
 
     const customer = document.createElement('div')
+    console.log(customerId);
+    customer.setAttribute("data-index", customerId)
     customer.classList.add("waitCustomerBox")
-
     const cookingBar = document.createElement("div")
     cookingBar.classList.add("cookingBar")
 
@@ -207,9 +214,9 @@ class Customer {
     cookingBar.appendChild(shade)
 
     const customerImg = document.createElement("img")
-    customerImg.src = 'asset/customer1.png'
+    customerImg.src = customersrc[customerId]
     customerImg.classList.add('customerImg')
-
+    customerImg.setAttribute("data-index", customerId)
     customer.appendChild(cookingBar)
     customer.appendChild(customerImg)
 
@@ -218,8 +225,11 @@ class Customer {
     customerWaitList.push(this)
     customerWaitNodeList.push(customer)
     customerWaitPlace.appendChild(customer)
-
-    customer.addEventListener('click', (e) => {
+    
+    customerImg.addEventListener('click', (e) => { 
+      customerWaitNode = customerImg.parentNode;
+      seatid = e.target.dataset.index;
+      console.log(seatid);
       menu.style.display = 'initial'
       blackShadow.style.display = 'initial'
     })
@@ -437,23 +447,7 @@ buyChef = () => {
   return true;
 }
 
-//解雇厨师
-function fryChef() {
-  if (chefNodeList.length == 2) {
-    //如果只剩下一位厨师就不能解雇了
-    chefNodeList[1].children[4].style.display = "none"
-    chefNodeList[1].children[3].style.display = "none"
-    chefNodeList[2].children[4].style.display = "initial"
-    chefNodeList[2].children[3].style.display = "none"
-  } else {
-    chefNodeList.re
-  }
-  //大于三位厨师框框变大
-  if (chefNodeList.length > 3) {
-    chefPlace.style.height = '38%'
-  }
-  return true;
-}
+
 
 //解雇厨师
 function fryChef() {
@@ -506,6 +500,7 @@ watchingIsNewDay = () => {
     console.log("newDay");
     //直接硬加上6位
     for (i = 0; i < 6; i++) {
+      customerId = i
       new Customer()
     }
     isNewDay = false
@@ -556,7 +551,7 @@ chronography = () => {
     week++;
     weekNum.innerHTML = week
     day = 1;
-    dealWeek();
+    // dealWeek();
   }
 }
  
@@ -621,7 +616,7 @@ allAddEventListener = () => {
       const element = customerSeats[i];
       //如果位置没有图片,则是空位
       if (!element.children[0].children[0]) {
-        new CustomerSeat(isrc = "/asset/customer3.png", node = element, myDish = currentDish)
+        new CustomerSeat(isrc = customersrc[seatid], node = element, myDish = currentDish)
         break
       }
     }
@@ -629,6 +624,7 @@ allAddEventListener = () => {
     //还是上一个顾客的菜单
     menu.style.display = 'none'
     blackShadow.style.display = 'none'
+    customerWaitPlace.removeChild(customerWaitNode);
   })
   //菜单的取消按钮
   confirmButton[1].addEventListener('click', (e) => {
@@ -636,6 +632,7 @@ allAddEventListener = () => {
     //还是上一个顾客的菜单
     menu.style.display = 'none'
     blackShadow.style.display = 'none'
+    customerWaitPlace.removeChild(customerWaitNode);
   })
 }
 

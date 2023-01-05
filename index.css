@@ -301,7 +301,7 @@ header {
   height: 28px;
   text-align: center;
   bottom: -5px;
-  top: 60px;
+  /* top: 60px; */
   display: none;
 }
 
@@ -391,10 +391,10 @@ section {
   background: bisque;
   text-align: center;
 }
-.orderdishes .eatingBar{
+.orderdishes .Bar{
   position: relative;
 }
-.eatingBar .dishOk{
+.orderdishes .Bar .dishOk{
   width:43px;
   height:43px;
   position:absolute;

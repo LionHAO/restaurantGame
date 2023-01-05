@@ -122,7 +122,6 @@ header {
   position: absolute;
   top: 30px;
   left: 140px;
-  ;
 }
 
 .orderCompleteBorder .inline-Box {
@@ -372,10 +371,36 @@ section {
 }
 
 .orderdishes .orderdish {
+  margin-bottom: 2px;
   border: solid 3px white;
   width: 100px;
   background: bisque;
   text-align: center;
+}
+.orderdishes .eatingBar{
+  position: relative;
+}
+.eatingBar .dishOk{
+  width:43px;
+  height:43px;
+  position:absolute;
+  left:100px;
+  top:-5px;
+}
+.checkout{
+  width: 60px;
+  height: 60px;
+  position: absolute;
+  top: 55px;
+  left: -25px;
+
+}
+.placate{
+  width: 60px;
+  height: 60px;
+  position: absolute;
+  top: 55px;
+  left: -25px;
 }
 
 /* 排队顾客 */

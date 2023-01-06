@@ -2,7 +2,6 @@ let timer = false;
 let globalTime = 0; //总时间
 let week = 1;
 let day = 1;
-var width = [0, 0, 0, 0, 0, 0];//六位等待顾客的进度条
 var interval //全局定时器,在末尾赋值
 var isNewDay// 判断是否是全新一天
 let fryNum;//炒掉第几个厨师
@@ -122,6 +121,8 @@ class CustomerSeat {
     this.myDish = myDish//点的菜
     this.money = 0
     this.bar = node.children[1].children//进度条
+    this.eatingList = []//哪个进度条是表示吃东西
+    this.waitingList = []//哪个进度条是表示
     this.#init()
   }
 
@@ -133,8 +134,10 @@ class CustomerSeat {
 
     customerSeatList.push(this)
 
+
     var j = 0
     for (i in this.myDish) {
+      this.waitingList.push(i)//往等待队列中加上每一道菜
       if (i == 0) {
         this.bar[j].children[0].children[0].innerText = '头孢'
         this.bar[j].style.display = 'block'
@@ -156,22 +159,33 @@ class CustomerSeat {
   }
 
   waiting() {
-    if (this.myDish.length <= 0) {
+    if (this.waitingList.length <= 0) {
       return
     }
     //给宽进行递增
-    for (i = 0; i < this.myDish.length; i++) {
+    for (i = 0; i < this.waitingList.length; i++) {
       //要是没有这个判断,会疯狂报错
       //因为这个i成分不纯有很多乱七八糟的东西但是其中有1,2,3这样我们想要的可以自己log看看
-      var width = this.bar[i].children[0].style.width.match(/\d+/)
+      var width = this.bar[waitingList[i]].children[0].style.width.match(/\d+/)
       if (width >= 100) {
-        this.bar[i].children[0].style.background = 'black'
+        this.bar[waitingList[i]].children[0].style.background = 'black'
+        //如果进度条满了,从等待队列移除调这个菜
+        this.waitingList.splice(i, 1)
         continue
       }
       width = parseInt(width[0]) + 1
       this.bar[i].children[0].style.width = width + '%'
     }
+    //如果已完成的菜品(全局)中已经有了这道菜,加他加入
+    if (doneDishes.length > 0) {
+      for (i in doneDishes) {
+        if (this.waitingList.indexOf(i) >= 0) {
+          this.eatingList.push(i)
+          doneDishes.splice(doneDishes.indexOf(i),1)
+        }
+      }
 
+    }
   }
 }
 
@@ -253,6 +267,8 @@ class Customer {
         customerWaitPlace.removeChild(pObjs[i]);
       }
     }
+
+
   }
 }
 
@@ -260,8 +276,10 @@ class Customer {
 class Chef {
   constructor(isBusy, workable) {
     this.isBusy = isBusy //忙吗
+    this.cookingInit = false//判断是不是第一次烧菜,因为没有这个会报错
     this.workable = workable //能不能干活
     this.workingDish //烧的是哪道菜
+    this.Node = []
     this.#init();
   }
 
@@ -353,9 +371,8 @@ class Chef {
     chef.appendChild(delChef)
     chef.appendChild(saveChef)
 
-
+    this.Node = chef
     //放入厨师的那块区域
-    //目前采用的这种方法还没考虑到后面的属性变化(比如进度条如果要改变的话该怎么处理),不知是否可行
     chefBoxPlace.appendChild(chef);
 
     chefNodeList.push(chef)
@@ -364,12 +381,14 @@ class Chef {
   //这个函数的工作逻辑是每一次调用进度条都会涨一点,需要外部调用实现增长不会自增
   cooking = () => {
     //获取这个对象在抽象数组中的位置
-    var index = chefList.indexOf(this)
+    // var index = chefList.indexOf(this)
+
     //获取进度条对象
-    var cookingBar = chefNodeList[index].children[1]
+    // var cookingBar = chefNodeList[index].children[1]
+    var cookingBar = this.Node.children[1]
 
     //判断是不是第一次进来,
-    if (!this.isBusy) {
+    if (!this.cookingInit) {
       //设置这个厨师忙着呢
       this.isBusy = true
       //解禁display
@@ -387,19 +406,20 @@ class Chef {
           cookingBar.children[0].children[0].innerText = '啤酒'
           break
       }
-
+      this.cookingInit = true
       cookingBar.children[0].style.width = '0%'
       cookingBar.children[0].style.background = 'red'
     }
 
     //给宽进行递增
-    var width = parseInt(cookingBar.children[0].style.width.match(/\d+/)[0]) + 1
+    var width = parseInt(cookingBar.children[0].style.width.match(/\d+/)) + 1
     cookingBar.children[0].style.width = width + '%'
     if (width >= 100) {
-      chefNodeList[index].children[2].style.display = 'block';
+      this.Node.children[2].style.display = 'block';
       this.isBusy = false//忙完了,不忙了
       this.workable = false//但是手里端着菜盘子,不能干活
-      chefWorking.splice(index, 1)
+      this.cookingInit = false//回归没有初始化的状态
+      doneDishes.push[workingDish]
     }
     //每0.1s加1,到92结束
   }
@@ -482,16 +502,17 @@ watchingChefWorking = () => {
     chefList.some((v, i) => {
       //类似map ,但当他return和return false时会结束当前循环,return true会完全结束循环
       if (!v.isBusy && v.workable) {
+        v.isBusy = true
         v.workingDish = allDishes.shift()//这个方法返回并删除数组的第一个元素
-        chefWorking.push(i)
         return true
       }
     })
   }
 
-
-  chefWorking.map((v, i) => {
-    chefList[i].cooking()
+  chefList.map((v, i) => {
+    if (v.isBusy == true) {
+      v.cooking()
+    }
   })
 }
 
@@ -512,7 +533,7 @@ watchingIsNewDay = () => {
   }
 }
 // //每天一次
-// function dealDaily(){   
+// function dealDaily(){
 //   for (i = 0; i < customers.length; i++)
 //   {
 //       customers[i].todayAte = false;
@@ -559,7 +580,7 @@ chronography = () => {
     dealWeek();
   }
 }
- 
+
 //测试时间静止
 stopTime = () => {
   clearInterval(interval)

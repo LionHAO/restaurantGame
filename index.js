@@ -41,6 +41,7 @@ const menu = document.querySelector(".menu")//菜单
 const checkedDish = document.querySelectorAll(".check")//菜单上的菜的
 const confirmButton = document.querySelectorAll(".menu button")//菜单上的俩按钮
 
+const cash = document.querySelector(".cash") //
 
 //测试
 button[0].addEventListener("click", (e) => {
@@ -121,8 +122,11 @@ class CustomerSeat {
     this.myDish = myDish//点的菜
     this.money = 0
     this.bar = node.children[1].children//进度条
-    this.eatingList = []//哪个进度条是表示吃东西
-    this.waitingList = []//哪个进度条是表示
+    this.eatingList = []//在被吃的菜有哪些
+    this.waitingList = []//在等待的菜有哪些,如果被等待的菜被吃了,将位置的值转为-1
+    //意思就是不会删除其中的某个值,而是将其转化成-1
+    this.satisfy = true
+    this.needed = true
     this.#init()
   }
 
@@ -141,14 +145,17 @@ class CustomerSeat {
       if (i == 0) {
         this.bar[j].children[0].children[0].innerText = '头孢'
         this.bar[j].style.display = 'block'
+        this.money += 12
       }
       if (i == 1) {
         this.bar[j].children[0].children[0].innerText = '炸鸡'
         this.bar[j].style.display = 'block'
+        this.money += 15
       }
       if (i == 2) {
         this.bar[j].children[0].children[0].innerText = '啤酒'
         this.bar[j].style.display = 'block'
+        this.money += 10
       }
       //如果不走这一步初始化width 可能在后面的判断会读不到width
       this.bar[j].children[0].style.width = '0%'
@@ -159,32 +166,93 @@ class CustomerSeat {
   }
 
   waiting() {
-    if (this.waitingList.length <= 0) {
-      return
-    }
+    this.eating()
+
     //给宽进行递增
     for (i = 0; i < this.waitingList.length; i++) {
-      //要是没有这个判断,会疯狂报错
+      if (this.waitingList[i] == -1) {
+        continue//如果是-1就不做这些事,-1代表这道菜已经上给他了
+      }
       //因为这个i成分不纯有很多乱七八糟的东西但是其中有1,2,3这样我们想要的可以自己log看看
-      var width = this.bar[waitingList[i]].children[0].style.width.match(/\d+/)
+      var width = this.bar[this.waitingList[i]].children[0].style.width.match(/\d+/)
       if (width >= 100) {
-        this.bar[waitingList[i]].children[0].style.background = 'black'
-        //如果进度条满了,从等待队列移除调这个菜
-        this.waitingList.splice(i, 1)
+        this.satisfy = false//设置不满足
+        this.bar[this.waitingList[i]].children[0].style.background = 'black'
+        switch (this.myDish[i]) {
+          case 0:
+            this.money -= 12
+            break
+          case 1:
+            this.money -= 15
+            break
+          case 2:
+            this.money -= 15
+            break
+        }
+        //如果进度条满了,在等待队列中将这道菜设置为-1
+        this.waitingList[i] = -1
         continue
       }
       width = parseInt(width[0]) + 1
       this.bar[i].children[0].style.width = width + '%'
     }
+
     //如果已完成的菜品(全局)中已经有了这道菜,加他加入
     if (doneDishes.length > 0) {
-      for (i in doneDishes) {
-        if (this.waitingList.indexOf(i) >= 0) {
-          this.eatingList.push(i)
-          doneDishes.splice(doneDishes.indexOf(i),1)
+      for (i in doneDishes) {//doneDishes储存的是[0,0,0,1,1,1]表示存的菜
+        var waitingListIndex = this.waitingList.indexOf(i)//获得该菜品在waitingList中的下标
+        if (waitingListIndex >= 0 && this.waitingList[waitingListIndex] != -1) {//在等的菜品队列中有这道菜,获得下标,他的下标就是第几个进度条
+          //如果进了这层判断表示顾客发现了自己的菜好了,从doneDishes中获取并加入eatingList开吃
+          var eatingButton = this.bar[waitingListIndex].children[0].children[1]//获得吃饭图片的对象
+          eatingButton.style.display = 'initial'//将上菜按钮打开
+          eatingButton.addEventListener('click', (e) => {
+            this.bar[waitingListIndex].children[0].style.background = 'orange'
+            this.bar[waitingListIndex].children[0].style.width = '0%'
+            this.waitingList[waitingListIndex] = -1//在waitingList中将相应的位置锁住(赋值-1)
+            this.eatingList.push(waitingListIndex)
+            eatingButton.style.display = 'none'
+            // doneDishes.splice(doneDishes.indexOf(i),1)
+            chefList.some(v => {
+              if (v.workingDish == i && v.isBusy == false) {
+                v.retire()
+              }
+            })
+          })
         }
       }
+    }
+  }
+  //逻辑:eatingList中存的是waitingList中-1的下标,把-1项的对应下标的进度条进行动态增加
+  //而waitingList中的位置和bar的位置是相同的,不会动态改变
+  eating() {
+    this.eatingList.some((v, i) => {
+      var width = this.bar[v].children[0].style.width.match(/\d+/)
+      if (width >= 100) { return }//如果进度条满了则跳过,
+      else {
+        width = parseInt(width) + 1
+        this.bar[v].children[0].style.width = width + '%'
+        return true//如果这道菜在吃着那么结束这整个循环(一次只吃一道菜)(后面应该对吃的菜进行一个时间的不同)
+      }
+    })
+    var isAllFinish = true
+    for (i in this.waitingList) {
+      if (i != -1) {
+        isAllFinish = false
+        break
+      }
+    }
+    // this.node.children[2]是结账, this.node.children[2]是安抚
+    if (isAllFinish) {
+      if (this.satisfy) {
+        var checkout = this.node.children[2]
+        checkout.display = 'block'
+        checkout.addEventListener('click', () => {
 
+        })
+      } else {
+        var placate = this.node.children[3]
+        placate.display = 'block'
+      }
     }
   }
 }
@@ -240,7 +308,6 @@ class Customer {
   }
 
   waiting = () => {
-
     // 对象在数组的下标
     var index = customerWaitList.indexOf(this)
     // 获得进度条对象
@@ -345,8 +412,6 @@ class Chef {
       blackShadow.style.display = "block";
       chefNode = delChef.parentNode;
       fryNum = e.target.dataset.index;
-      console.log(fryNum + "---------");
-      console.log(e.target);
     })
 
 
@@ -412,16 +477,23 @@ class Chef {
     }
 
     //给宽进行递增
-    var width = parseInt(cookingBar.children[0].style.width.match(/\d+/)) + 1
+    var width = parseInt(cookingBar.children[0].style.width.match(/\d+/)) + 4
     cookingBar.children[0].style.width = width + '%'
     if (width >= 100) {
       this.Node.children[2].style.display = 'block';
       this.isBusy = false//忙完了,不忙了
       this.workable = false//但是手里端着菜盘子,不能干活
       this.cookingInit = false//回归没有初始化的状态
-      doneDishes.push[workingDish]
+      doneDishes.push(this.workingDish)
     }
     //每0.1s加1,到92结束
+  }
+
+  retire = () => {
+    var cookingBar = this.Node.children[1]
+    cookingBar.style.display = 'none'
+    this.Node.children[2].style.display = 'none';
+    this.workable = true
   }
 }
 
@@ -457,23 +529,6 @@ buyChef = () => {
   return true;
 }
 
-//解雇厨师
-function fryChef() {
-  if (chefNodeList.length == 2) {
-    //如果只剩下一位厨师就不能解雇了
-    chefNodeList[1].children[4].style.display = "none"
-    chefNodeList[1].children[3].style.display = "none"
-    chefNodeList[2].children[4].style.display = "initial"
-    chefNodeList[2].children[3].style.display = "none"
-  } else {
-    chefNodeList.re
-  }
-  //大于三位厨师框框变大
-  if (chefNodeList.length > 3) {
-    chefPlace.style.height = '38%'
-  }
-  return true;
-}
 
 //解雇厨师
 function fryChef() {
@@ -549,7 +604,6 @@ watchIngCustomerWaiting = () => {
 
 watchingCustomerSeatWaiting = () => {
   customerSeatList.map((v) => {
-    console.log();
     v.waiting()
   })
 }
@@ -618,12 +672,11 @@ allAddEventListener = () => {
     blackShadow.style.display = "none";
   })
   confirmFry.addEventListener("click", (e) => {
-    console.log(chefNodeList.length);
     fryChef()
     fryChef1.style.display = "none";
     blackShadow.style.display = "none";
-    console.log(chefNodeList.length);
   })
+
 
 
   //菜单的确定按钮
@@ -666,11 +719,17 @@ resetMenu = () => {
   }
 }
 
+updateMoney = () => {
+  cash.innerText = sumMoney
+}
+
+
 //初始化
 init = () => {
   timer = true
   sumMoney = 300
   isNewDay = true
+  updateMoney()//更新金钱,设为summoney
   allAddEventListener()//开局需要加上的eventListener
   buyChef();//开局加一个
   buyChef();//开局加一个

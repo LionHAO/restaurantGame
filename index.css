@@ -394,12 +394,13 @@ section {
 .orderdishes .eatingBar{
   position: relative;
 }
-.eatingBar .dishOk{
+.dishOk{
   width:43px;
   height:43px;
-  position:absolute;
+  /* position:absolute; */
   left:100px;
   top:-5px;
+  display: none;
 }
 .checkout{
   width: 60px;
@@ -407,7 +408,6 @@ section {
   position: absolute;
   top: 55px;
   left: -25px;
-
 }
 .placate{
   width: 60px;

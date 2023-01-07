@@ -411,6 +411,7 @@ section {
   position: absolute;
   top: 55px;
   left: -25px;
+  display: none;
 }
 
 .placate {
@@ -419,6 +420,7 @@ section {
   position: absolute;
   top: 55px;
   left: -25px;
+  display: none;
 }
 
 /* 排队顾客 */

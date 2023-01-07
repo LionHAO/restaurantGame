@@ -9,6 +9,9 @@ let chefNode;//厨师节点，为了删除厨师
 var sumMoney //总金额
 var allDishes = [] //所有菜品队列
 var doneDishes = [] //完成的菜品
+var customerId;//第几位顾客
+var seatid;//上座时的第几位顾客
+var customerWaitNode;//等待顾客节点
 
 const chefNodeList = []//厨师的dom节点list
 const chefList = []//厨师的对象list
@@ -36,10 +39,18 @@ const noRecruitment = document.querySelector(".noRecruitment");//先不招聘
 const confirmFry = document.querySelector(".confirmFry");//确认解雇
 const noFry = document.querySelector(".noFry");//先不解雇
 const customerSeats = document.querySelectorAll(".grid-item")
-
 const menu = document.querySelector(".menu")//菜单
 const checkedDish = document.querySelectorAll(".check")//菜单上的菜的
 const confirmButton = document.querySelectorAll(".menu button")//菜单上的俩按钮
+const moneyAlert = document.querySelector(".moneyAlert");//解雇厨师金额不足警告
+const finish = document.querySelector(".finish");//游戏结束弹窗
+const gameBegin = document.querySelector(".gameBegin")
+const begin = document.querySelector(".gameBegin button")
+
+
+//顾客图片
+const customersrc = ['asset/customer1.png', 'asset/customer2.png', 'asset/customer3.png', 'asset/customer4.png', 'asset/customer5.png', 'asset/customer6.png']
+
 
 const cash = document.querySelector(".cash") //
 
@@ -298,6 +309,7 @@ class Customer {
     this.#init()
   }
 
+  // customerid = nowcustomer
   #init = () => {
     // <!-- <div class='waitCustomerBox' id='waitCustomerBox0'>
     //     <div class='cookingBar'>
@@ -309,8 +321,9 @@ class Customer {
     //   </div> -->
 
     const customer = document.createElement('div')
+    console.log(customerId);
+    customer.setAttribute("data-index", customerId)
     customer.classList.add("waitCustomerBox")
-
     const cookingBar = document.createElement("div")
     cookingBar.classList.add("cookingBar")
 
@@ -325,9 +338,9 @@ class Customer {
     cookingBar.appendChild(shade)
 
     const customerImg = document.createElement("img")
-    customerImg.src = 'asset/customer1.png'
+    customerImg.src = customersrc[customerId]
     customerImg.classList.add('customerImg')
-
+    customerImg.setAttribute("data-index", customerId)
     customer.appendChild(cookingBar)
     customer.appendChild(customerImg)
 
@@ -337,9 +350,13 @@ class Customer {
     customerWaitNodeList.push(customer)
     customerWaitPlace.appendChild(customer)
 
-    customer.addEventListener('click', (e) => {
+    customerImg.addEventListener('click', (e) => {
+      customerWaitNode = customerImg.parentNode;
+      seatid = e.target.dataset.index;
+      console.log(seatid);
       menu.style.display = 'initial'
       blackShadow.style.display = 'initial'
+      stopTime()
     })
   }
 
@@ -444,6 +461,7 @@ class Chef {
     delChef.setAttribute("data-index", chefNodeList.length)
     delChef.style.display = "none"
     delChef.addEventListener("click", (e) => {
+      stopTime()
       fryChef1.style.display = "block";
       blackShadow.style.display = "block";
       chefNode = delChef.parentNode;
@@ -456,6 +474,7 @@ class Chef {
     saveChef.append("＋")
     saveChef.classList.add("save-chef");
     saveChef.addEventListener("click", (e) => {
+      stopTime()
       buyChef1.style.display = "block";
       blackShadow.style.display = "block";
     })
@@ -638,6 +657,7 @@ watchingIsNewDay = () => {
     console.log("newDay");
     //直接硬加上6位
     for (i = 0; i < 6; i++) {
+      customerId = i
       new Customer()
     }
     isNewDay = false
@@ -686,9 +706,17 @@ chronography = () => {
   }
   if (day > 7) {
     week++;
+    sumMoney -= chefList.length * 80
+    updateMoney()
+    // if()
     weekNum.innerHTML = week
     day = 1;
-    dealWeek();
+    // dealWeek();
+  }
+  if (sumMoney < 0) {
+    blackShadow.style.display = 'initial'
+    finish.style.display = "block"
+    stopTime()
   }
 }
 
@@ -713,6 +741,7 @@ resetMenu = () => {
 allAddEventListener = () => {
   //确认招聘
   confirmRecruitment.addEventListener("click", (e) => {
+    continueTime()
     buyChef1.style.display = "none";
     blackShadow.style.display = "none";
     buyChef()
@@ -720,18 +749,33 @@ allAddEventListener = () => {
 
   //先不招聘
   noRecruitment.addEventListener("click", (e) => {
+    continueTime()
     buyChef1.style.display = "none";
     blackShadow.style.display = "none";
   })
   //先不解雇
   noFry.addEventListener("click", (e) => {
+    continueTime()
     fryChef1.style.display = "none";
     blackShadow.style.display = "none";
   })
   confirmFry.addEventListener("click", (e) => {
-    fryChef()
-    fryChef1.style.display = "none";
-    blackShadow.style.display = "none";
+    continueTime()
+    if (sumMoney < 80) {
+      moneyAlert.style.display = "block"
+      fryChef1.style.display = "none";
+      blackShadow.style.display = "none";
+    }
+    else {
+      fryChef()
+      sumMoney = sumMoney - 80
+      updateMoney()
+      fryChef1.style.display = "none";
+      blackShadow.style.display = "none";
+    }
+  })
+  moneyAlert.addEventListener("click", (e) => {
+    moneyAlert.style.display = "none"
   })
 
 
@@ -755,7 +799,8 @@ allAddEventListener = () => {
       const element = customerSeats[i];
       //如果位置没有图片,则是空位
       if (!element.children[0].children[0]) {
-        new CustomerSeat(isrc = "/asset/customer3.png", node = element, myDish = currentDish)
+        new CustomerSeat(isrc = customersrc[seatid], node = element, myDish = currentDish)
+
         break
       }
     }
@@ -763,6 +808,8 @@ allAddEventListener = () => {
     //还是上一个顾客的菜单
     menu.style.display = 'none'
     blackShadow.style.display = 'none'
+    continueTime()
+    customerWaitPlace.removeChild(customerWaitNode);
   })
   //菜单的取消按钮
   confirmButton[1].addEventListener('click', (e) => {
@@ -770,6 +817,8 @@ allAddEventListener = () => {
     //还是上一个顾客的菜单
     menu.style.display = 'none'
     blackShadow.style.display = 'none'
+    continueTime()
+    customerWaitPlace.removeChild(customerWaitNode);
   })
 }
 
@@ -788,6 +837,7 @@ updateMoney = () => {
 init = () => {
   timer = true
   sumMoney = 300
+  updateMoney()
   isNewDay = true
   updateMoney()//更新金钱,设为summoney
   allAddEventListener()//开局需要加上的eventListener
@@ -797,9 +847,11 @@ init = () => {
   //后面是很难停下来的,设置一个时间计时器来总揽全部时间流动,每一种变化都是加入到时间流中
   //可以实现暂停跟继续
   interval = setInterval(chronography, 100);
-
   return true;
 }
 
-
-init()//全局初始化
+begin.addEventListener('click', (e) => {
+  gameBegin.style.display = 'none'
+  blackShadow.style.display = 'none'
+  this.init()
+})

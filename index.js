@@ -141,8 +141,6 @@ class CustomerSeat {
   }
 
 
-
-
   #init() {
     var seatImg = document.createElement('img')
     seatImg.classList.add('seatImg')
@@ -154,50 +152,76 @@ class CustomerSeat {
     checkout.addEventListener('click', (e) => {
       sumMoney += this.money
       updateMoney()
-      this.node.children[0].children[0].src = ''
+      this.node.children[0].removeChild(this.node.children[0].children[0])
       this.node.children[2].style.display = 'none'
       this.node.children[3].style.display = 'none'
       for (i = 0; i < this.bar.length; i++) {
         this.bar[i].style.display = 'none'
+        this.bar[i].children[0].style.background = 'red'
       }
       customerSeatList.splice(customerSeatList.indexOf(this), 1)
     })
 
     var placate = this.node.children[3]
     placate.addEventListener('click', (e) => {
-      this.node.children[0].children[0].src = ''
+      this.node.children[0].removeChild(this.node.children[0].children[0])
       this.node.children[2].style.display = 'none'
       this.node.children[3].style.display = 'none'
       for (i = 0; i < this.bar.length; i++) {
         this.bar[i].style.display = 'none'
+        this.bar[i].children[0].style.background = 'red'
       }
       customerSeatList.splice(customerSeatList.indexOf(this), 1)
     })
 
-
-
     var j = 0
     for (i in this.myDish) {
-      this.waitingList.push(i)//往等待队列中加上每一道菜
-      if (i == 0) {
+      this.waitingList.push(this.myDish[i])
+      if (myDish[i] == '0') {
         this.bar[j].children[0].children[0].innerText = '头孢'
         this.bar[j].style.display = 'block'
         this.money += 12
       }
-      if (i == 1) {
+      else if (myDish[i] == '1') {
         this.bar[j].children[0].children[0].innerText = '炸鸡'
         this.bar[j].style.display = 'block'
         this.money += 15
       }
-      if (i == 2) {
+      else if (myDish[i] == '2') {
         this.bar[j].children[0].children[0].innerText = '啤酒'
         this.bar[j].style.display = 'block'
         this.money += 10
       }
+      var eatingButton = this.bar[j].children[0].children[1]//获得吃饭图片的对象
+      const t = j;
+      eatingButton.addEventListener('click', (e) => {
+        console.log('t', t);
+        console.log('this.waitingList', this.waitingList[t]);
+        doneDishes.splice(doneDishes.indexOf(this.waitingList[t]), 1)
+        this.bar[t].children[0].style.background = 'orange'
+        this.bar[t].children[0].style.width = '0%'
+        this.eatingList.push(t)
+        eatingButton.style.display = 'none'
+        // doneDishes.splice(doneDishes.indexOf(i),1)
+        console.log(chefList);
+        chefList.some((v, i) => {
+          console.log("v.workingDish" + v.workingDish, "this.waitingList[j]" + this.waitingList[t]);
+          if (v.workingDish == parseInt(this.waitingList[t]) && v.isBusy == false && v.workable == false) {
+            console.log("找着了", i);
+            v.retire()
+            return true
+          } else {
+            console.log('没找着');
+          }
+        })
+        this.waitingList[t] = -2//在waitingList中将相应的位置锁住(赋值-1)
+      })
       //如果不走这一步初始化width 可能在后面的判断会读不到width
-      this.bar[j].children[0].style.width = '0%'
+      this.bar[t].children[0].style.width = '0%'
       j += 1
     }
+    ////////////////////////////
+
     menu.style.display = 'none'
     blackShadow.style.display = 'none'
   }
@@ -228,6 +252,10 @@ class CustomerSeat {
             this.money -= 15
             break
         }
+        if (allDishes.indexOf(this.myDish[i]) >= 0) {
+          console.log('here', allDishes);
+          allDishes.splice(allDishes.indexOf(this.myDish[i]), 1)
+        }
         //如果进度条满了,在等待队列中将这道菜设置为-1
         this.waitingList[i] = -1
         var eatingButton = this.bar[i].children[0].children[1]//获得吃饭图片的对象
@@ -240,27 +268,29 @@ class CustomerSeat {
 
     //如果已完成的菜品(全局)中已经有了这道菜,加他加入
     if (doneDishes.length > 0) {
-
-      for (i in doneDishes) {//doneDishes储存的是[0,0,0,1,1,1]表示存的菜
-        var waitingListIndex = this.waitingList.indexOf(i)//获得该菜品在waitingList中的下标
+      for (i in doneDishes) {//doneDishes储存的是[0,0,0,1,1,1]表示存的菜 i是下标
+        console.log(i, doneDishes);
+        var waitingListIndex = this.waitingList.indexOf(doneDishes[i])//获得该菜品在waitingList中的下标
         if (waitingListIndex >= 0 && this.waitingList[waitingListIndex] != -1) {//在等的菜品队列中有这道菜,获得下标,他的下标就是第几个进度条
           //如果进了这层判断表示顾客发现了自己的菜好了,从doneDishes中获取并加入eatingList开吃
           var eatingButton = this.bar[waitingListIndex].children[0].children[1]//获得吃饭图片的对象
           eatingButton.style.display = 'initial'//将上菜按钮打开
-          eatingButton.addEventListener('click', (e) => {
-            doneDishes.splice(doneDishes.indexOf(i), 1)
-            this.bar[waitingListIndex].children[0].style.background = 'orange'
-            this.bar[waitingListIndex].children[0].style.width = '0%'
-            this.waitingList[waitingListIndex] = -2//在waitingList中将相应的位置锁住(赋值-1)
-            this.eatingList.push(waitingListIndex)
-            eatingButton.style.display = 'none'
-            // doneDishes.splice(doneDishes.indexOf(i),1)
-            chefList.some(v => {
-              if (v.workingDish == i && v.isBusy == false) {
-                v.retire()
-              }
-            })
-          })
+          // eatingButton.addEventListener('click', (e) => {
+          //   console.log("click");
+          //   doneDishes.splice(i, 1)
+          //   this.bar[waitingListIndex].children[0].style.background = 'orange'
+          //   this.bar[waitingListIndex].children[0].style.width = '0%'
+          //   this.waitingList[waitingListIndex] = -2//在waitingList中将相应的位置锁住(赋值-1)
+          //   this.eatingList.push(waitingListIndex)
+          //   eatingButton.style.display = 'none'
+          //   // doneDishes.splice(doneDishes.indexOf(i),1)
+          //   chefList.some(v => {
+          //     if (v.workingDish == doneDishes[i] && v.isBusy == false) {
+          //       v.retire()
+          //       return true
+          //     }
+          //   })
+          // })
         }
       }
 
@@ -285,7 +315,6 @@ class CustomerSeat {
 
     for (i = 0; i < this.waitingList.length; i++) {
       if (this.waitingList[i] != -1) {
-        console.log(this.waitingList[i])
         isAllFinish = false
         break
       }
@@ -321,7 +350,6 @@ class Customer {
     //   </div> -->
 
     const customer = document.createElement('div')
-    console.log(customerId);
     customer.setAttribute("data-index", customerId)
     customer.classList.add("waitCustomerBox")
     const cookingBar = document.createElement("div")
@@ -353,7 +381,6 @@ class Customer {
     customerImg.addEventListener('click', (e) => {
       customerWaitNode = customerImg.parentNode;
       seatid = e.target.dataset.index;
-      console.log(seatid);
       menu.style.display = 'initial'
       blackShadow.style.display = 'initial'
       stopTime()
@@ -387,8 +414,6 @@ class Customer {
         customerWaitPlace.removeChild(pObjs[i]);
       }
     }
-
-
   }
 }
 
@@ -399,7 +424,7 @@ class Chef {
     this.cookingInit = false//判断是不是第一次烧菜,因为没有这个会报错
     this.workable = workable //能不能干活
     this.workingDish //烧的是哪道菜
-    this.Node = []
+    this.Node
     this.#init();
   }
 
@@ -502,12 +527,12 @@ class Chef {
   waiting = () => {
     var cookingBar = this.Node.children[1]
 
-    var width = parseInt(cookingBar.children[0].style.width.match(/\d+/)) - 4
+    var width = parseInt(cookingBar.children[0].style.width.match(/\d+/)) - 2
     cookingBar.children[0].style.width = width + '%'
     if (width <= 0) {
       this.Node.children[2].style.display = 'none';
       this.isBusy = false//忙完了,不忙了
-      this.workable = false//但是手里端着菜盘子,不能干活
+      this.workable = true
       this.cookingInit = false//回归没有初始化的状态
       this.workingDish = ''
       cookingBar.style.display = 'none'
@@ -563,6 +588,8 @@ class Chef {
 
   retire = () => {
     var cookingBar = this.Node.children[1]
+    console.log(cookingBar);
+
     cookingBar.style.display = 'none'
     this.Node.children[2].style.display = 'none';
     this.workable = true
@@ -800,7 +827,6 @@ allAddEventListener = () => {
       //如果位置没有图片,则是空位
       if (!element.children[0].children[0]) {
         new CustomerSeat(isrc = customersrc[seatid], node = element, myDish = currentDish)
-
         break
       }
     }

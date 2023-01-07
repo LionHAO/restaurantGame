@@ -27,7 +27,7 @@
   --linearGradient-orange: linear-gradient(to right, var(--color-lightOrange) 0%, var(--color-lightOrange) 50%, var(--color-darkOrange) 51%, var(--color-darkOrange) 100%);
   --linearGradient-purple: linear-gradient(to right, var(--color-lightPurpel) 0%, var(--color-lightPurpel) 50%, var(--color-darkPurpel) 51%, var(--color-darkPurpel) 100%);
   --linearGradient-gray: linear-gradient(to right, var(--color-lightGray) 0%, var(--color-lightGray) 50%, var(--color-darkGray) 51%, var(--color-darkGray) 100%);
-  --linearGradient-gray: linear-gradient(to right, var(--color-lightBrown) 0%, var(--color-lightBrown) 50%, var(--color-darkBrown) 51%, var(--color-darkBrown) 100%);
+  --linearGradient-brown: linear-gradient(to right, var(--color-lightBrown) 0%, var(--color-lightBrown) 50%, var(--color-darkBrown) 51%, var(--color-darkBrown) 100%);
 }
 
 * {
@@ -36,7 +36,6 @@
   box-sizing: border-box;
 }
 
-html,
 body {
   color: var(--fontcolor-brown);
   width: 100vw;
@@ -48,23 +47,29 @@ body {
   background: #344D67;
 }
 
-
-main {
-  width: 700px;
-  height: 700px;
-  background-color: var(--color-green);
-  border: 10px solid #C0EEE4;
-  padding: 10px;
+.waitCustomerBox {
+  margin-right: 20px;
 }
 
-header{
+main {
+  /* display: none; */
+  width: 700px;
+  height: 700px;
+  background: url(./asset/background.jpg) no-repeat;
+  background-size: cover;
+  border: 10px solid #C0EEE4;
+  padding: 10px;
+  position: relative;
+}
+
+header {
   display: flex;
   justify-content: space-between;
 }
 
-.time{
+.time {
   /* background-color: #ffffff */
-  background:var(--linearGradient-yellow);
+  background: var(--linearGradient-yellow);
   border: 5px solid var(--color-brown);
   border-radius: 20px;
   width: 200px;
@@ -73,8 +78,8 @@ header{
   line-height: 40px;
 }
 
-.cash{
-  background:var(--linearGradient-yellow);
+.cash {
+  background: var(--linearGradient-yellow);
   border: 5px solid var(--color-brown);
   border-radius: 30px;
   width: 300px;
@@ -83,12 +88,402 @@ header{
   line-height: 40px;
 }
 
-.chef{
-  background: var(--color-darkYellow);
-  height: 40%;
+.seatImg {
+  width: 100%
 }
 
-.consumer{
+/* 点餐部分 */
+.menu {
+  width: 450px;
+  height: 550px;
+  background: #f1b80c;
+  position: absolute;
+  display: none;
+  z-index: 2;
+}
+
+.menu-border {
+  width: 80%;
+  margin: auto;
+  border: #d96d00 solid 3px;
+  background: white;
+
+}
+
+.orderCompleteBorder .inline-Box,
+.noeat .inline-Box {
+  background: var(--linearGradient-yellow);
+  border: 5px solid var(--color-brown);
+  border-radius: 20px;
+  width: 200px;
+  height: 50px;
+  text-align: center;
+  line-height: 40px;
+}
+
+.orderDishes {
+  position: absolute;
+  top: 30px;
+  left: 140px;
+}
+
+.orderCompleteBorder .inline-Box {
+  position: absolute;
+  bottom: 20px;
+  left: 0;
+}
+
+.noeat .inline-Box {
+  position: absolute;
+  bottom: 20px;
+  right: 0;
+}
+
+.customerBox {
+  position: absolute;
+  top: -40px;
+  left: 40px;
+}
+
+.menu-border {
+  position: absolute;
+  top: 70px;
+  left: 50px;
+}
+
+.inline-border {
+  position: relative;
+}
+
+.menu .menu-border .inline-border .allDishes {
+  margin-left: 6%;
+  margin-top: 3%;
+}
+
+.menu .menu-border .inline-border .dishes {
+  margin: 3% 0 0 15%;
+}
+
+/* 开始游戏启动部分 */
+.gameBegin {
+  background: #f1b80c;
+  z-index: 2;
+  position: absolute
+}
+
+.play .inline-Box {
+  background: var(--linearGradient-yellow);
+  border: 5px solid var(--color-brown);
+  border-radius: 20px;
+  width: 200px;
+  height: 50px;
+  text-align: center;
+  line-height: 40px;
+}
+
+.gameBegin .inline-Box {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+}
+
+/* 招聘厨师部分*/
+.buyChef {
+  background: #f1b80c;
+  display: none;
+  position: fixed;
+  top: 40%;
+  left: 38%;
+  z-index: 2;
+
+}
+
+.buyChef .inline-Box {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+}
+
+.confirmRecruitment .inline-Box,
+.noRecruitment .inline-Box {
+  background: var(--linearGradient-yellow);
+  border: 5px solid var(--color-brown);
+  border-radius: 20px;
+  width: 200px;
+  height: 50px;
+  text-align: center;
+  line-height: 40px;
+}
+
+/* 解雇厨师 */
+.fryChef {
+  background: #f1b80c;
+  display: none;
+  position: fixed;
+  top: 40%;
+  left: 38%;
+  z-index: 2;
+}
+
+.fryChef .inline-Box {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+}
+
+.confirmFry .inline-Box,
+.noFry .inline-Box {
+  background: var(--linearGradient-yellow);
+  border: 5px solid var(--color-brown);
+  border-radius: 20px;
+  width: 200px;
+  height: 50px;
+  text-align: center;
+  line-height: 40px;
+}
+
+.moneyAlert {
+  display: none;
+}
+
+/* 厨师部分 */
+.chefPlace {
+  background: yellow;
+  width: 100%;
+  height: 20%;
+  border: 3px solid white;
+  border-radius: 5px;
+}
+
+.small-inline-Box {
+  display: grid;
+  grid-template-columns: 33% 33% 33%;
+}
+
+.chefBox {
+  margin: 10px auto auto;
+  position: relative;
+}
+
+.shade {
+  height: 20px;
+  z-index: 0;
+  width: 1%;
+  background: red;
+}
+
+.wait {
+  position: absolute;
+  width: 95px;
+}
+
+.dish {
+  width: 95px;
+}
+
+.cookingBar {
+  position: absolute;
+  border: solid 4px white;
+  width: 95px;
+  text-align: center;
+  bottom: -5px;
+  background: bisque;
+}
+
+.Bar {
+  margin-top: -4px;
+  border: solid 4px white;
+  background: bisque;
+  width: 100px;
+  height: 28px;
+  text-align: center;
+  bottom: -5px;
+  /* top: 60px; */
+  display: none;
+}
+
+.addCookerImg {
+  width: 100px;
+  border: 5px solid white;
+  border-radius: 50%;
+  background: var(--linearGradient-gray);
+}
+
+.plateImg {
+  width: 70px;
+  position: absolute;
+  bottom: -4px;
+  left: -8px;
+}
+
+.del-chef {
+  position: absolute;
+  font-size: 48px;
+  color: #006dd9;
+  right: -10px;
+  top: -20px;
+  cursor: pointer;
+}
+
+.save-chef {
+  position: absolute;
+  font-size: 56px;
+  color: #006dd9;
+  left: 23px;
+  top: 15px;
+  cursor: pointer;
+}
+
+
+
+/* 顾客部分 */
+
+.consumerPlace {
   background: var(--color-darkOrange);
-  height: 40%;
+  height: 35%;
+  width: 97%;
+  border: 5px solid white;
+  border-radius: 10px;
+  position: absolute;
+  bottom: 100px;
+  left: 10px;
+}
+
+section {
+  border: 5px solid white;
+  border-radius: 10px;
+}
+
+.grid-container {
+  background: var(--color-darkOrange);
+  display: grid;
+  grid-template-columns: auto auto;
+  width: 100%;
+  height: 100%;
+}
+
+.grid-item {
+  margin: auto 50px;
+  position: relative;
+}
+
+.seat {
+  width: 100px;
+  height: 100px;
+  border: 5px solid white;
+  border-radius: 50%;
+  background: var(--linearGradient-gray);
+}
+
+.orderdishes {
+  position: absolute;
+  top: 10px;
+  left: 100px;
+}
+
+.orderdishes .orderdish {
+  margin-bottom: 2px;
+  border: solid 3px white;
+  width: 100px;
+  background: bisque;
+  text-align: center;
+}
+
+.orderdishes .Bar {
+  position: relative;
+}
+
+.dishOk {
+  width: 43px;
+  height: 43px;
+  position: absolute;
+  left: 100px;
+  top: -5px;
+  /* display: none; */
+}
+
+.checkout {
+  width: 60px;
+  height: 60px;
+  position: absolute;
+  top: 55px;
+  left: -25px;
+  display: none;
+}
+
+.placate {
+  width: 60px;
+  height: 60px;
+  position: absolute;
+  top: 55px;
+  left: -25px;
+  display: none;
+}
+
+/* 排队顾客 */
+.waitingPlace {
+  display: flex;
+  position: absolute;
+  height: 15%;
+  width: 97%;
+  bottom: 0px;
+  left: 10px;
+}
+
+.customerImg {
+  width: 80px;
+  border: 5px solid white;
+  border-radius: 50%;
+  background: var(--linearGradient-gray);
+}
+
+/* 警告部分 */
+.moneyAlert {
+  display: none;
+  background: wheat;
+  color: #0dbcc2;
+  position: absolute;
+  top: 340px;
+  left: 550px;
+  border: 5px white solid;
+  font-size: large
+}
+
+.finish {
+  display: none;
+  background: wheat;
+  color: #0dbcc2;
+  position: absolute;
+  top: 40%;
+  left: 37%;
+  text-align: center;
+  line-height: 90px;
+  height: 100px;
+  width: 200px;
+  border: 5px white solid;
+  font-size: 35px
+}
+
+.chefAlert {
+  display: none;
+  background: wheat;
+  color: #0dbcc2;
+  position: absolute;
+  top: 340px;
+  left: 600px;
+  border: 5px white solid;
+  font-size: large
+}
+
+/* 阴影效果 */
+.blackShadow {
+  display: block;
+  position: absolute;
+  width: 97%;
+  height: 100%;
+  background-color: rgba(88, 88, 88, 0.568);
+  z-index: 1;
 }

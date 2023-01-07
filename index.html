@@ -5,29 +5,310 @@
   <meta charset="UTF-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Document</title>
-  <link rel="stylesheet" href="./index.css">
-  <link rel="stylesheet" href="./public.css">
-  <script src="./script.js"></script>
+  <title>餐厅游戏</title>
+  <link href="index.css" rel="stylesheet">
 </head>
 
 <body>
-  <main>
+  <main id="main">
+    <div class="blackShadow"></div>
     <header>
       <div class="time">
-        W1 D1
+        W<span class="weekNum">1</span> D<span class="dayNum">1</span>
       </div>
       <div class="cash">
-        穷光蛋
       </div>
     </header>
-    <section class="chef">
-    </section>
-    <section class="consumer">
-    </section>
-    <footer class="waiting">
+    <button>添加</button>
+    <button>烧菜</button>
+    <button>暂停</button>
+    <button>继续</button>
+    <button>入座</button>
+    <div class="chefPlace">
+      <div class='small-inline-Box'><!--inline-Box-->
+        <!-- 这个位置是放厨师的 -->
+        <!-- 这些注释已经不需要,但是可以在调试的时候放开 -->
+        <!-- <div class='chefBox' id='chefBox1'>
+          <img class='addCookerImg' src='asset/chef.png' alt='cooker'> -->
+        <!-- 做菜进度条 -->
+        <!-- <div class='cookingBar'>
+            <div class='shade'>
+              <p class='dish'>UI炖UI</p>
+            </div>
+          </div> -->
+        <!-- 递盘子 -->
+        <!-- <img class='plateImg' src='asset/food.png' alt='plate'> -->
+        <!-- 删除厨师 -->
+        <!-- <p class="del-chef">×</p> -->
+        <!-- 添加厨师 -->
+        <!-- <p class="save-chef">＋</p>
+        </div>  -->
+
+      </div>
+    </div>
+
+    </div>
+    <div class="consumerPlace">
+      <div class="grid-container">
+        <!-- <img class="dishOk" data-index='3' data-allindex='3' src='asset/food.png' alt='菜做好了'> -->
+        <div class="grid-item">
+          <div class="seat">
+            <!-- <img class="seatImg" src="/asset/customer2.png" /> -->
+          </div>
+          <div class="orderdishes">
+            <div class="Bar">
+              <div class="shade">
+                <p class="dish">1</p>
+                <img class="dishOk" src='asset/food.png' alt='菜做好了'>
+              </div>
+            </div>
+            <div class="Bar">
+              <div class="shade">
+                <p class="dish">1
+                </p>
+                <img class="dishOk" src='asset/food.png' alt='菜做好了'>
+              </div>
+            </div>
+            <div class="Bar">
+              <div class="shade">
+                <p class="dish">1
+                </p>
+                <img class="dishOk" src='asset/food.png' alt='菜做好了'>
+              </div>
+            </div>
+          </div>
+          <img class='checkout' data-index='1' src='asset/money.png' alt='结账'>
+          <img class='placate' data-index='1' src='asset/heart.png' alt='安抚'>
+        </div>
+        <div class='grid-item' id='customerBox2'>
+          <div class='seat'></div>
+          <div class="orderdishes">
+            <div class="Bar">
+              <div class="shade">
+                <p class="dish">UI炖UI</p>
+                <img class="dishOk" src='asset/food.png' alt='菜做好了'>
+              </div>
+            </div>
+            <div class="Bar">
+              <div class="shade">
+                <p class="dish">UI炖UI</p>
+                <img class="dishOk" src='asset/food.png' alt='菜做好了'>
+              </div>
+            </div>
+            <div class="Bar">
+              <div class="shade">
+                <p class="dish">UI炖UI</p>
+                <img class="dishOk" src='asset/food.png' alt='菜做好了'>
+              </div>
+            </div>
+          </div>
+          <img class='checkout' data-index='2' src='asset/money.png' alt='结账'>
+          <img class='placate' data-index='2' src='asset/heart.png' alt='安抚'>
+        </div>
+        <div class='grid-item' id='customerBox3'>
+          <div class='seat'></div>
+          <div class="orderdishes">
+            <div class="Bar">
+              <div class="shade">
+                <p class="dish">UI炖UI</p>
+                <img class="dishOk" src='asset/food.png' alt='菜做好了'>
+              </div>
+            </div>
+            <div class="Bar">
+              <div class="shade">
+                <p class="dish">UI炖UI</p>
+                <img class="dishOk" src='asset/food.png' alt='菜做好了'>
+              </div>
+            </div>
+            <div class="Bar">
+              <div class="shade">
+                <p class="dish">UI炖UI</p>
+                <img class="dishOk" src='asset/food.png' alt='菜做好了'>
+              </div>
+            </div>
+          </div>
+          <img class='checkout' data-index='3' src='asset/money.png' alt='结账'>
+          <img class='placate' data-index='3' src='asset/heart.png' alt='安抚'>
+        </div>
+        <div class="grid-item">
+          <div class="seat"></div>
+          <div class="orderdishes">
+            <div class="Bar">
+              <div class="shade">
+                <p class="dish">UI炖UI</p>
+                <img class="dishOk" src='asset/food.png' alt='菜做好了'>
+              </div>
+            </div>
+            <div class="Bar">
+              <div class="shade">
+                <p class="dish">UI炖UI</p>
+                <img class="dishOk" src='asset/food.png' alt='菜做好了'>
+              </div>
+            </div>
+            <div class="Bar">
+              <div class="shade">
+                <p class="dish">UI炖UI</p>
+                <img class="dishOk" src='asset/food.png' alt='菜做好了'>
+              </div>
+            </div>
+          </div>
+          <img class='checkout' data-index='4' src='asset/money.png' alt='结账'>
+          <img class='placate' data-index='4' src='asset/heart.png' alt='安抚'>
+        </div>
+      </div>
+    </div>
+    <footer class="waitingPlace">
+      <!--id指排队的第几位客人-->
+
+      <!-- 放客人等待队列的地方,测试可用,勿删 -->
+      <!-- <div class='waitCustomerBox' id='waitCustomerBox0'>
+        <div class='cookingBar'>
+          <div class='shade'>
+            <p class='wait'>等待中</p>
+          </div>
+        </div>
+        <img class='customerImg' src='asset/customer1.png' alt='custmoer'>
+      </div> -->
+
     </footer>
   </main>
+  <!-- 开始游戏启动部分 -->
+  <section class='gameBegin'>
+    <div class='inline-Box'>
+      <h1>WebMOOC餐厅开业啦!</h1>
+      <p class='introduction'>WebMOOC餐厅即将开业，请认真经营你的餐厅吧经营餐厅需要做好下面几件事情! 加油!</p>
+      <div class='things'>
+        <p>招聘厨师</p>
+        <p>迎接客人</p>
+        <p>烹饪美食</p>
+      </div>
+      <div class='play'>
+        <button class='inline-Box'>
+          <div class='shade'></div>
+          <p>开始经营吧</p>
+        </button>
+      </div>
+    </div>
+  </section>
+  <!-- 点餐部分 -->
+  <section class='menu'>
+    <div class='inline-Box'>
+      <div class='customerBox'>
+        <div class='inline-Box-eating4' id='inline-customerBox1'>
+          <div class='customer-shade'></div>
+        </div>
+        <!-- <img class='customerImg' src='asset/customer2.png' alt='custmoer'> -->
+        <!-- 一个花里胡哨的功能,写了增加工作量 -->
+      </div>
+      <!-- <p class='orderDishes'><span class='customerName'>QIAN</span>正在点菜，已点 <span class='totalPrice'></span> 元的菜 -->
+      <!-- </p> -->
+      <!-- <div class='menu-border'>
+        <div class='inline-border'>
+          <p class='allDishes'>凉菜（二选一，可不点）</p>
+          <p class='dishes'><input class='check' type="checkbox" id='coldDishe1'>凉拌SAN<span>...............￥
+              6</span></p>
+          <p class='dishes'><input class='check' type="checkbox" id='coldDishe2'>冷切DOM<span>...............￥
+              4</span></p>
+          <p class='allDishes'>主菜（五选一，必点）</p>
+          <p class='dishes'><input class='check' type="checkbox" id='mainDishe1'>UL炖LI<span>...............￥
+              12</span></p>
+          <p class='dishes'><input class='check' type="checkbox" id='mainDishe2'>红烧HEAD<span>...............￥
+              15</span></p>
+          <p class='dishes'><input class='check' type="checkbox" id='mainDishe3'>酥炸ECharts<span>...............￥
+              18</span></p>
+          <p class='dishes'><input class='check' type="checkbox" id='mainDishe4'>炭烤CSS<span>...............￥
+              16</span></p>
+          <p class='dishes'><input class='check' type="checkbox" id='mainDishe5'>清蒸DIV<span>...............￥
+              12</span></p>
+          <p class='allDishes'>饮品（二选一，可不点）</p>
+          <p class='dishes'><input class='check' type="checkbox" id='drink1'>鲜榨flex<span>...............￥
+              5</span></p>
+          <p class='dishes'><input class='check' type="checkbox" id='drink2'>小程序奶茶<span>...............￥
+              6</span></p>
+        </div>
+      </div> -->
+      <div class='menu-border'>
+        <p>必须点一项</p>
+        <div class='inline-border'>
+          <p class='allDishes'>小菜</p>
+          <p class='dishes'><input class='check' type="checkbox" id='smallDishe'>头孢<span>...............￥
+              12</span></p>
+          <p class='allDishes'>主菜</p>
+          <p class='dishes'><input class='check' type="checkbox" id='mainDishe'>炸鸡<span>...............￥
+              15</span></p>
+          <p class='allDishes'>饮品</p>
+          <p class='dishes'><input class='check' type="checkbox" id='drink'>啤酒<span>...............￥
+              10</span></p>
+        </div>
+      </div>
+      <div class='orderCompleteBorder'>
+        <button class='inline-Box'>
+          <p>点好了，快点上菜</p>
+        </button>
+      </div>
+      <div class='noeat'>
+        <button class='inline-Box'>
+          <p>不吃了</p>
+        </button>
+      </div>
+    </div>
+  </section>
+  <!-- 招聘厨师部分 -->
+  <section class='buyChef'>
+    <div class='inline-Box'>
+      <h1>招聘新厨师</h1>
+      <p>招聘一名新厨师可以帮你更快地为顾客烹饪菜肴，</p>
+      <p>增加餐厅收入。你最多可以拥有六名厨师。</p>
+      <p>但每个厨师每周需要你支付工资￥100</p>
+      <p>请问你确认新招聘一名厨师吗?</p>
+      <div class='confirmRecruitment'>
+        <button class='inline-Box'>
+          <div class='shade'></div>
+          <p>是的，确认招聘</p>
+        </button>
+      </div>
+      <div class='noRecruitment'>
+        <button class='inline-Box'>
+          <div class='shade'></div>
+          <p>先不了</p>
+        </button>
+      </div>
+    </div>
+  </section>
+  <!-- 解雇厨师部分 -->
+  <section class='fryChef'>
+    <div class='inline-Box'>
+      <h1>解雇厨师</h1>
+      <p class="one">解雇当前闲置的厨师可以帮你节省成本。</p>
+      <p>解雇时会按厨师本周已经工作的日子结算工资</p>
+      <p>并会赔偿一周工资作为解约金。</p>
+      <p>解雇当前厨师结算工资及解约金需要付出￥140</p>
+      <div class='confirmFry'>
+        <button class='inline-Box'>
+          <div class='shade'></div>
+          <p>是的，确认解雇</p>
+        </button>
+      </div>
+      <div class='noFry'>
+        <button class='inline-Box'>
+          <div class='shade'></div>
+          <p>先不了</p>
+        </button>
+      </div>
+    </div>
+  </section>
+  <!-- 警告部分 -->
+  <div class='moneyAlert'>
+    <p>你的金额已经不足支付解约金</p>
+  </div>
+  <div class='finish'>
+    <p>GameOver</p>
+  </div>
+  <div class='chefAlert'>
+    <p>招聘厨师成功！您已经有<span id='chefNumber'> 5 </span>名厨师</p>
+  </div>
+  
+  <script src="index.js"></script>
 </body>
 
 </html>

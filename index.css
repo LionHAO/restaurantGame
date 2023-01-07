@@ -408,6 +408,7 @@ section {
   position: absolute;
   top: 55px;
   left: -25px;
+  display: none;
 }
 .placate{
   width: 60px;
@@ -415,6 +416,7 @@ section {
   position: absolute;
   top: 55px;
   left: -25px;
+  display: none;
 }
 
 /* 排队顾客 */
